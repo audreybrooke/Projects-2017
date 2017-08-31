@@ -1,0 +1,105 @@
+
+Audrey Brooke Homework 1
+
+Problem 1
+
+Part (a):
+   1. yes
+   2. no
+   3. no
+   4. yes
+   5. no
+   6. no
+   
+Part (b):
+   1. no
+   2. yes
+   3. no
+   4. yes
+   
+Part (c):
+   1. no
+   2. yes
+   3. yes
+   4. yes
+   5. yes
+   6. no
+   
+Part (d):
+   1. no
+   2. yes
+   3. no
+   4. no
+   5. no
+   
+Part (e):
+   1. no
+   2. yes
+   3. yes
+     
+   
+Problem 2
+ 
+Part (a):  
+   1. no
+   2. no
+   3. yes
+   4. no
+   5. no
+   
+Part (b):
+   1. yes
+   2. no
+   3. yes
+   
+Part (c): ****
+   1. git add hw1q2b.cpp
+   2. git log
+
+Part (d):
+   prints "Aborting the commit due to empty commit message."
+   So, the staged files are not commited because there was
+   no commit message, which is not optional
+   
+Part (e): ****
+   ssh-keygen -t rsa -b 2048 -C "abrooke@usc.edu"
+
+
+Problem 4
+   1. output is 15. 15 is the result because it is the sum of all
+   the prime factors of 180. In this case, 180 was divisible by 2, 2,
+   3, 3, and 5, which add to 15.
+
+   2. funcA(n) always terminates because any number is divisible by
+   atleast itself, and the else case causes the "i" (aka the number
+   that "n" is divided by) to increase until the size of n. Once
+   this happens, the if case returns n. If a number is divisible
+   by something other than itself, the else case will increase i
+   until that number is found then repeat until n is only divisible
+   by itself, or 1, in which case the earlier portion holds true and
+   the function will eventually terminate.
+
+   3. The code checks if "n", which starts
+   at 180 is divisible by i, which starts as 2. If so, it divides
+   by i and tries again. If it is not divisible by i, it searches
+   for the next number which n is divisible by by increasing i
+   until n is divisible by i or i reaches the same size as n. Then
+   the code recursively adds all the prime numbers it was able to
+   divide n by to get
+
+
+Problem 6
+
+file is called, homework1q6.cpp
+
+
+
+
+
+
+
+
+
+
+
+
