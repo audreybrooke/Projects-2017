@@ -1,0 +1,28 @@
+Audrey Brooke
+Homework 2 - Answers to problems 1 and 3
+
+Problem 1
+---------
+a) Unmodified
+b) fun_problem.txt is untracked and README.txt is modified
+c) both are staged
+d) both are modified
+e) **** HELP ****
+
+Problem 3
+---------
+
+The returned list is a reverse of the original.
+5, 4, 3, 2, 1
+This happens because the last node is "saved" as aka
+pointed to by out after the while loop in funcA.
+Then, the call to funcB reverses the list starting at out.
+So out is saved as the end of the original list, but
+becomes the begining of the reverse list. funcB is able to
+reverse the list since it returns a Node pointer which allows
+it to save the value of "in" when the function call starts
+and add that to the list after the previous node's location
+which is returned from the next call to funcB. Thus, by
+starting at the end of the list (determined by the if statement)
+and traversing back up, funcB is able to recall all the values
+in reverse order and add them back to the list.
