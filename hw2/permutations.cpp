@@ -5,12 +5,12 @@
 
 using namespace std;
 
-void helper (string in, int firstIndex, int in.length())
+void helper (string in, int firstIndex)
 {
   // checks if switching is finished and permutation is ready to print
   // doesn't need to switch because it would be switching the last char
   // with itself
-  if (firstIndex == in.length())
+  if (firstIndex == (int) in.length())
   {
     cout << in << endl;
   }
@@ -24,14 +24,14 @@ void helper (string in, int firstIndex, int in.length())
     // this encapsulates all permutations becuse the firstIndex
     // is always switched with itself to maintain that permutation
 
-    for (int i = firstIndex; i < in.length(); ++i)
+    for (int i = firstIndex; i < (int) in.length(); ++i)
     {
       // switch index first with i
       char temp = in[firstIndex];
       in[firstIndex] = in [i];
       in [i] = temp;
       // call to swap next index
-      helper (in, firstIndex+1, in.length());
+      helper (in, firstIndex+1);
 
     }
   }
