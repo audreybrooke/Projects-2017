@@ -4,7 +4,8 @@
 - **USC ID**: 8899562687
 - **Email**: abrooke@usc.edu
 
-To Complie: (this doesn't work without main's but the insturctions say not to include mains)
+To Complie: (this doesn't work without main's but the
+ insturctions say not to include mains)
 
 Problem 4 (fullsort.cpp):
 g++ g- Wall- fullsort.cpp -o fullsort
