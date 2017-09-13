@@ -4,10 +4,13 @@ Homework 2 - Answers to problems 1 and 3
 Problem 1
 ---------
 a) Unmodified
-b) fun_problem.txt is untracked and README.txt is modified
+b) fun_problem.txt is untracked and README.md is modified
 c) both are staged
 d) both are modified
-e) **** HELP ****
+e) README.md is staged and fun_problem.txt is unmodified
+   Contents of fun_problem.txt: ""
+   This is because the git checkout -- reverted the file
+   back to the unmodified version
 
 Problem 3
 ---------
@@ -15,7 +18,7 @@ Problem 3
 The returned list is a reverse of the original.
 5, 4, 3, 2, 1
 This happens because the last node is "saved" as aka
-pointed to by out after the while loop in funcA.
+pointed to by "out" after the while loop in funcA.
 Then, the call to funcB reverses the list starting at out.
 So out is saved as the end of the original list, but
 becomes the begining of the reverse list. funcB is able to
