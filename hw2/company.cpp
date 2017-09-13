@@ -2,6 +2,8 @@
 #include <stddef.h>
 #include <iostream>
 
+using namespace std;
+
 CompanyTracker::CompanyTracker (int n)
   // initializes the tracker with n students and their 1-person companies
 {
@@ -19,6 +21,23 @@ CompanyTracker::~CompanyTracker ()
   // go through companies array and at each index find largest parent
   // delete that parent and continue until largest parent is itself
   // delete self and move to next index
+
+  for (int i = 0; i < numCompanies; ++i)
+  {
+    Company* largestParent = largestCompany(i);
+    while (largestParent != companies[i])
+    {
+      Company* toDelete = largestParent;
+      toDelete -> merge1 -> parent = NULL;
+      toDelete -> merge2 -> parent = NULL;
+      delete toDelete;
+      largestParent = largestCompany(i); 
+    }
+
+    delete companies [i];
+  }
+
+  delete [] companies;
 }
 
 void CompanyTracker::merge (int i, int j)
