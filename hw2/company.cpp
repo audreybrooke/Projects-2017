@@ -53,7 +53,7 @@ void CompanyTracker::merge (int i, int j)
   // your implementation goes here
 
   // check if i or j are out of range
-  if (i >= numCompanies || j >= numCompanies)
+  if (i >= numCompanies || j >= numCompanies || i < 0 || j < 0)
   {
     return;
   }
@@ -106,7 +106,7 @@ void CompanyTracker::split (int i)
 
   // check if i is in range
 
-  if (i >= numCompanies)
+  if (i >= numCompanies || i < 0)
   {
     return;
   }
@@ -145,18 +145,25 @@ bool CompanyTracker::inSameCompany (int i, int j)
 {
   // your implementation goes here
 
+  // if there are no companies, return 0
+
+  if (numCompanies == 0)
+  {
+    return false;
+  }
+
+  // if i or j are out of range return false
+
+  if (i >= numCompanies || j >= numCompanies || i < 0 || j < 0)
+  {
+    return false;
+  }
+
   // if i == j return true
 
   if (i == j)
   {
     return true;
-  }
-
-  // if i or j are out of range return false
-
-  if (i >= numCompanies || j >= numCompanies)
-  {
-    return false;
   }
 
   // find i and j's largest parent
