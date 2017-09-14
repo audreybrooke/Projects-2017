@@ -7,6 +7,14 @@ using namespace std;
 CompanyTracker::CompanyTracker (int n)
   // initializes the tracker with n students and their 1-person companies
 {
+
+  if (n < 0)
+  {
+    cerr << "Can't have negative companies" << endl;
+    return;
+  }
+
+
   numCompanies = n;
   companies = new Company* [numCompanies];
   for (int i = 0; i < numCompanies; ++i)
