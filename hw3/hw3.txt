@@ -148,7 +148,7 @@ is theta (1). Using the credit scheme way of solving, if there
 are 2 operations counted each time the user uses pushfront(x),
 then if they popback() and stack1 is empty the entire contents
 of stack2 is copied over. This will only happen once for each
-item in pushed to stack2 because popfront() can not be called
+item pushed to stack2 because popfront() can not be called
 (which would potentially move them back to stack2). Thus, when
 the item is originally 
 added to stack2 it uses 1 operation and when it is inevitably
@@ -157,7 +157,7 @@ second operation. The same logic applies to popback() and moving
 items from stack2 to stack1. So the amortized runtime would also
 be constant.
 The push functions (pushfront(x) and pushback(x)) will have a
-constant runtime, as well. If the qeque is implemented with a 
+constant runtime, as well. If the deque is implemented with a 
 linked list then each push will cause a change in a set number
 of pointers reguardless of the size of the deque. If the deque
 is implemented as an array the amortized runtime would also be
@@ -172,9 +172,10 @@ Calling popfront() then popback() repeatedly once one of the
 stacks is empty would create a very poor amortized runtime
 because once one of the stacks is empty and the corresponding pop
 is called, the entire concents of the other stack must be
-transfered over. When that happens, the first stack is now empty
+transfered over. When that happens, the second stack is now empty
 so calling the original pop again will cause the entire stack to
-be coppied back over to the first stack. This process of copying the stack just to pop
+be coppied back over to the first stack. This process of copying
+the stack just to pop
 one item will continue until the deque is empty and as long as
 popback() and popfront() are called one after another, then the
 entire deque will need to be coppied from one stack to another.
