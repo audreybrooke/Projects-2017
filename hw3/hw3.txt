@@ -37,12 +37,54 @@ Problem 3
 ---------
 
 Part (a)
+The runtime would be theta(n^2). This is because the first loop
+will execute n times (since it runs from 0 to n) and in the worst
+case, every value will be 0 so the if statement will be true each
+time. Then, the second for loop runs a max of n times (because i
+is n at max). Once in the next if statement the calculations run
+in constant
+time because j starts at 0, causing the third loop to run do 
+A[i] = 1 one time. After this, the if statement in the "j"/second
+for loop will always evaluate to false. So the third loop will
+only execute once per iteration of the first loop, and when it
+does it only does one operation. The second loop will execute a
+maximum of i times but only during the first itteration through
+can the if statement be true.
 
 Part (b)
+Since i in the first for loop is multiplied by 2 each itteration,
+the sequence of numbers entering the function call is 1, 2, 4, 8,
+16, 32, ..., n. Once sent to the function, it is recursively
+called the number of times of the parameter (because the
+parameter is subtracted by 1 until it is equal to 1. Thus, the
+problem does the summation of 1, 2, 4, 8, ..., n operations.
+This summation is: the summation from i=1 until logbase2n of 2^i.
+This summation caculates to 2(n-1) which is theta(n).
 
 Part (c)
+This code has a runtime theta(n^2 * logn). The first loop is
+theta(n), which is added to the runtime of the code after that
+loop ends. The next for loop (first of the nested loops) runs
+n times because i goes from 0 to n. The while loop nested in
+in there evaluates to n*log n. This is because the if statement
+will evaluate true everytime for i=1, n/2 the times for i=2,
+n/3 times for i=3, etc. When the if statement is true, n
+calculations are done in the for loop. Thus the while is n* the
+summation of 1 + 1/2 + 1/3 + 1/4 + ... + 1/n. That summation is
+harmonic and equal to logn. Thus the while loop is n*logn and
+that is inside a for loop that executes n times, so the runtime
+of the whole section is n^2logn + n (from the first separate
+loop). This is theta (n^2 * logn).
 
 Part (d)
+In this loop, making a[i] = sqrt(i) is constant time unless,
+the if statement (i == size) is true. Since the array triples
+in size each time this is true. It will be true at i=3,9,27,...,n
+All the operations in this if are constant time, except the for
+loop which executes size times. So the runtime is the summation
+of the sizes that make the if statement true. This is the
+summation from i=1 to logbase3n of 3^i. This evaluates to 
+3(n-1)/2 which is theta(n).
       
 
 Problem 6
@@ -105,12 +147,25 @@ The amortized runtime of popback() (if there is no popfront())
 is theta (1). Using the credit scheme way of solving, if there
 are 2 operations counted each time the user uses pushfront(x),
 then if they popback() and stack1 is empty the entire contents
-of stack2 is copied over. Thus, when the item is originally 
+of stack2 is copied over. This will only happen once for each
+item in pushed to stack2 because popfront() can not be called
+(which would potentially move them back to stack2). Thus, when
+the item is originally 
 added to stack2 it uses 1 operation and when it is inevitably
 copied over to stack1 (which will happen only once) it uses the
 second operation. The same logic applies to popback() and moving
 items from stack2 to stack1. So the amortized runtime would also
 be constant.
+The push functions (pushfront(x) and pushback(x)) will have a
+constant runtime, as well. If the qeque is implemented with a 
+linked list then each push will cause a change in a set number
+of pointers reguardless of the size of the deque. If the deque
+is implemented as an array the amortized runtime would also be
+constant because the credit scheme says that when the item is
+added it is counted with 2 extra operations and if the array
+reaches capacity and needs to be copied over the two "credits"
+are used to copy the array over. It needs two because it must
+copy the first part of the array which is of equal size, as well.
 
 Part (d)
 Calling popfront() then popback() repeatedly once one of the
@@ -118,8 +173,8 @@ stacks is empty would create a very poor amortized runtime
 because once one of the stacks is empty and the corresponding pop
 is called, the entire concents of the other stack must be
 transfered over. When that happens, the first stack is now empty
-so calling the other pop will cause the entire stack to be
-coppied over again. This process of copying the stack just to pop
+so calling the original pop again will cause the entire stack to
+be coppied back over to the first stack. This process of copying the stack just to pop
 one item will continue until the deque is empty and as long as
 popback() and popfront() are called one after another, then the
 entire deque will need to be coppied from one stack to another.
