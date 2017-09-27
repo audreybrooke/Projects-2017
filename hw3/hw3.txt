@@ -56,7 +56,7 @@ Since i in the first for loop is multiplied by 2 each itteration,
 the sequence of numbers entering the function call is 1, 2, 4, 8,
 16, 32, ..., n. Once sent to the function, it is recursively
 called the number of times of the parameter (because the
-parameter is subtracted by 1 until it is equal to 1. Thus, the
+parameter is subtracted by 1 until it is equal to 1). Thus, the
 problem does the summation of 1, 2, 4, 8, ..., n operations.
 This summation is: the summation from i=1 until logbase2n of 2^i.
 This summation caculates to 2(n-1) which is theta(n).
