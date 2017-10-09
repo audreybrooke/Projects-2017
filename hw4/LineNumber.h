@@ -1,5 +1,4 @@
 #include <iostream>
-#include <string>
 
 class LineNumber {
   // abstract class for a BASIC Command

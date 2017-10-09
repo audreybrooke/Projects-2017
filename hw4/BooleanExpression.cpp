@@ -18,11 +18,11 @@ Equal::~Equal ()
   
 void Equal::print (std::ostream & o) const
 {
-  o << "(";
+  o << "[";
   _ae1->print (o);
   o << " = ";
   _ae2->print (o);
-  o << ")";
+  o << "]";
 }
 
 // LessThan
@@ -41,9 +41,9 @@ LessThan::~LessThan ()
   
 void LessThan::print (std::ostream & o) const
 {
-  o << "(";
+  o << "[";
   _ae1->print (o);
   o << " < ";
   _ae2->print (o);
-  o << ")";
+  o << "]";
 }

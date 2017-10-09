@@ -1,8 +1,20 @@
 #include "Command.h"
-#include "ArithmeticExpression.h"
-#include "BooleanExpression.h"
 
 using namespace std;
+
+// Line
+
+  Line::Line (LineNumber* theNum, Command* theCom)
+  {
+    ln = theNum;
+    com = theCom;
+  }
+
+  Line::~Line()
+  {
+    delete ln;
+    delete com;
+  }
 
 // Print_Command
 
@@ -78,8 +90,9 @@ Goto_Command::~Goto_Command ()
   
 void Goto_Command::print (std::ostream & o) const
 {
-  o << "GOTO ";
+  o << "GOTO <";
   _num->print (o);
+  o << ">";
 }
 
 // IfThen_Command
@@ -100,13 +113,14 @@ void IfThen_Command::print (std::ostream & o) const
 {
   o << "IF ";
   _be1->print (o);
-  o << " THEN ";
+  o << " THEN <";
   _num->print(o);
+  o << ">";
 }
 
 // Gosub_Command
 
-Gosub_Command::Gosub_Command (LineNumber *num1, LineNumber *num2
+Gosub_Command::Gosub_Command (LineNumber *num1, LineNumber *num2)
 {
   _num1 = num1;
   _num2 = num2;
@@ -120,8 +134,9 @@ Gosub_Command::~Gosub_Command ()
   
 void Gosub_Command::print (std::ostream & o) const
 {
-  o << "GOSUB ";
+  o << "GOSUB <";
   _num2->print (o);
+  o << ">";
 }
 
 // Return_Command
@@ -129,6 +144,18 @@ void Gosub_Command::print (std::ostream & o) const
 void Return_Command::print (std::ostream & o) const
 {
 	o << "RETURN";
+}
+
+Return_Command::Return_Command()
+{
+
+}
+
+// End_Command
+
+End_Command::End_Command()
+{
+  
 }
 
 void End_Command::print (std::ostream & o) const

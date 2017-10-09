@@ -11,3 +11,8 @@ void LineNumber::print (std::ostream & o) const
 {
   o << line;
 }
+
+LineNumber::~LineNumber()
+{
+	
+}

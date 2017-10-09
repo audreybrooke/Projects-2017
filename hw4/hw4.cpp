@@ -2,18 +2,19 @@
 #include <fstream>
 #include <sstream>
 #include <stdlib.h>
-//#include "Command.h"
-#include "ArithmeticExpression.h"
+#include "Command.h"
 #include <stack>
 #include <stdio.h>
 #include <ctype.h>
 #include <algorithm>
 #include <cstddef>
 #include <string>
+#include <vector>
 
 using namespace std;
 
 ArithmeticExpression* readAExpression (string ss);
+BooleanExpression* readBExpression (string ss);
 
 
 int main(int argc, char* argv[])
@@ -21,9 +22,9 @@ int main(int argc, char* argv[])
   if(argc < 2){
     // REMOVE THIS!
 
-    ArithmeticExpression* exp = readAExpression("(Value[(5* int[4])]   +8)");
-    exp->print(cout);
-    cout << endl;
+    //ArithmeticExpression* exp = readAExpression("(Value[(5* int[4])]   +8)");
+    //exp->print(cout);
+    //cout << endl;
 
     //
     cerr << "Please provide an input file." << endl;
@@ -37,8 +38,9 @@ int main(int argc, char* argv[])
   }
 
   string curr; // the current line
+  vector<Line*> theProgram;
 
-  /*
+  
   //loop to read all lines of the program
   while(getline(input, curr)) {
     stringstream ss;
@@ -48,25 +50,59 @@ int main(int argc, char* argv[])
     
     ss >> line;
     ss >> command;
+    LineNumber* tLine = new LineNumber(line);
+
+    cout << "On line: " << line << endl;
+
+
     if (command == "PRINT") {
       // you obviously need to put a lot of stuff here and in the other cases
       // build a Print_Command object
 
+      // cout << "found a print command: " << endl;
+
       ArithmeticExpression* arex;
-      string tString;
+      string tString; // remaining portion of the line
       getline (ss, tString);
       arex = readAExpression (tString);
       Command* printCom = new Print_Command(arex);
+      Line* newLine = new Line (tLine, printCom); 
+      // ^ is the line object for this line of orig code
+      theProgram.push_back(newLine);
 
     }
     else if (command == "LET") {
       // check if variable is array or int
       string var;
       ss >> var;
-      string peekChar = ss.peek();
-      if (peekChar == "[")
+      char c;
+      ss.get(c);
+
+      while (c == ' ')
       {
+        // do nothing
+        ss.get(c);
+      }
+
+
+      if (c == '[')
+      {
+
         // use Let array class
+        string tString; // remaining portion of the line
+        getline (ss, tString);
+        tString= tString;
+        string exp1, exp2;
+
+        // !!NOT PERFECT!! WHAT IF EXPRESSION HAS ] IN IT
+        int found = tString.find(']');
+        exp1 = tString.substr(0, found); // index
+        exp2 = tString.substr(found+1, tString.length()); //new value
+        ArithmeticExpression* index = readAExpression(exp1);
+        ArithmeticExpression* newValue = readAExpression(exp2);
+        Command* letArrCom = new LetArray_Command(var, index, newValue);
+        Line* newLine = new Line (tLine, letArrCom);
+        theProgram.push_back(newLine);
 
       }
 
@@ -74,17 +110,57 @@ int main(int argc, char* argv[])
       {
         // use Let const class
 
+      ArithmeticExpression* arex;
+      string tString; // remaining portion of the line
+      getline (ss, tString);
+      tString = c + tString;
+      arex = readAExpression (tString);
+      Command* LetConstCom = new LetConst_Command(var, arex);
+      Line* newLine = new Line (tLine, LetConstCom); 
+      // ^ is the line object for this line of orig code
+      theProgram.push_back(newLine);
+
       }
     }
     else if (command == "GOTO") {
+      int goToThisLine;
+      ss >> goToThisLine;
+      LineNumber* goToLineNumberObj = new LineNumber (goToThisLine);
+      Command* GoToCom = new Goto_Command(goToLineNumberObj);
+      Line* newLine = new Line (tLine, GoToCom);
+      theProgram.push_back(newLine);
+
     }
     else if (command == "IF") {
+
+      string tString; // remaining portion of the line
+      getline (ss, tString);
+      int found = tString.find("THEN");
+      string be = tString.substr(0, found);
+      string goToLine = tString.substr(found+4, tString.length());
+      LineNumber* goToLineNumberObj = new LineNumber (atoi(goToLine.c_str()));
+      BooleanExpression* boep = readBExpression(be);
+      Command* IfThenCom = new IfThen_Command(goToLineNumberObj, boep);
+      Line* newLine = new Line (tLine, IfThenCom);
+      theProgram.push_back(newLine);
     }
     else if (command == "GOSUB") {
+      int goToThisLine;
+      ss >> goToThisLine;
+      LineNumber* goToLineNumberObj = new LineNumber (goToThisLine);
+      Command* GoSubCom = new Gosub_Command(tLine, goToLineNumberObj);
+      Line* newLine = new Line (tLine, GoSubCom);
+      theProgram.push_back(newLine);
     }
     else if (command == "RETURN") {
+      Command* returnCom = new Return_Command();
+      Line* newLine = new Line (tLine, returnCom);
+      theProgram.push_back(newLine);
     }
     else if (command == "END") {
+      Command* endCom = new End_Command();
+      Line* newLine = new Line (tLine, endCom);
+      theProgram.push_back(newLine);
     }
     else {
       // This should never happen - print an error?
@@ -93,7 +169,22 @@ int main(int argc, char* argv[])
   }
 
 
-  */
+
+  // finished reading through program
+
+  // print out vector of line objects to output file
+
+  for (int i = 0; i < (int) theProgram.size(); ++i)
+  {
+    Line* thisLine = theProgram[i];
+    thisLine -> ln -> print(cout);
+    cout << " ";
+    thisLine -> com -> print(cout);
+    cout << endl;
+  }
+
+
+  
   return 0;
 }
 
@@ -126,7 +217,7 @@ ArithmeticExpression* readAExpression (string ss)
   stack<char> operatorStack;
   stack<ArithmeticExpression*> aeStack;
   stack<char> variablesStack;
-  string arrayVariableName;
+  stack <string> arrayVariableName;
   
   for (int i = 0; i < (int)ss.length(); ++i)
   {
@@ -157,8 +248,8 @@ ArithmeticExpression* readAExpression (string ss)
       }
 
       reverse(theV.begin(), theV.end());
-      arrayVariableName = theV;
-      // !!! this will not work if the index expression contains another array
+      arrayVariableName.push(theV);
+      cout << "pushed array name on stack" << endl;
 
 
       // push [ on char stack to signify that the expression until ]
@@ -199,39 +290,46 @@ ArithmeticExpression* readAExpression (string ss)
        }
       }
 
-      ArithmeticExpression* lhs = aeStack.top();
-      aeStack.pop();
-      ArithmeticExpression* rhs = aeStack.top();
-      aeStack.pop();
-      char theOperator = operatorStack.top();
-      operatorStack.pop();
-      ArithmeticExpression* tooAdd;
+      if (!operatorStack.empty())
+      {
+        ArithmeticExpression* lhs = aeStack.top();
+       aeStack.pop();
+       ArithmeticExpression* rhs = aeStack.top();
+       aeStack.pop();
+       char theOperator = operatorStack.top();
+       operatorStack.pop();
+       ArithmeticExpression* tooAdd;
 
-      cout << "the operator is " << theOperator << endl;
+        if (theOperator == '+')
+        {
+          tooAdd = new Addition (rhs, lhs);
+       }
+       else if (theOperator == '-')
+       {
+         tooAdd = new Subtraction (rhs, lhs);
+       }
+       else if (theOperator == '*')
+       {
+         tooAdd = new Multiplication (rhs, lhs);
+       }
+       else if (theOperator == '/')
+       {
+         tooAdd = new Division (rhs, lhs);
+       }
+       else
+       {
+         cerr << "invalid operator:" << theOperator << endl;
+       }
+
+        aeStack.push(tooAdd);
+      }
+
+      
+
+      // cout << "the operator is " << theOperator << endl;
 
 
-      if (theOperator == '+')
-      {
-        tooAdd = new Addition (rhs, lhs);
-      }
-      else if (theOperator == '-')
-      {
-        tooAdd = new Subtraction (rhs, lhs);
-      }
-      else if (theOperator == '*')
-      {
-        tooAdd = new Multiplication (rhs, lhs);
-      }
-      else if (theOperator == '/')
-      {
-        tooAdd = new Division (rhs, lhs);
-      }
-      else
-      {
-        cerr << "invalid operator:" << theOperator << endl;
-      }
 
-      aeStack.push(tooAdd);
 
     }
     else if (theChar == ']')
@@ -274,8 +372,11 @@ ArithmeticExpression* readAExpression (string ss)
         ArithmeticExpression* index = aeStack.top();
         aeStack.pop();
 
-        cout << endl << "arrray name is: " << arrayVariableName << endl;
-        ArithmeticExpression* theArray = new ArrayVariable (arrayVariableName, index);
+        // cout << endl << "arrray name is: " << arrayVariableName << endl;
+        cout << "trying to create theArray object" << endl;
+        ArithmeticExpression* theArray = new ArrayVariable (arrayVariableName.top(), index);
+        arrayVariableName.pop();
+        cout << "created theArray object" << endl;
         aeStack.push(theArray);
       }
     }
@@ -286,12 +387,11 @@ ArithmeticExpression* readAExpression (string ss)
       // push that on the expression stack
 
       operatorStack.push(theChar);
-      cout << "just pushed " << theChar << " on Operator stack" << endl;
+      // cout << "just pushed " << theChar << " on Operator stack" << endl;
 
       if (!variablesStack.empty())
       {
         string theV = "";
-        cout << "variablesStack not empty" << endl; 
       
         while ((int)variablesStack.size() > 0)
         {
@@ -322,96 +422,111 @@ ArithmeticExpression* readAExpression (string ss)
     }
     else
     {
-      cerr << "Invalid input" << endl;
+      // cerr << "Invalid input:" << theChar << endl;
       // could throw exception so that correct line number is printed
     }
 
   }
 
-
-return aeStack.top();
-
-
-
-
-
-/*
-
-
-  if (item[0] != "(")
+  if (aeStack.empty() && !variablesStack.empty())
   {
-    // just 1 "thing", variable or constant
-    if (item.find_first_not_of("0123456789") == string::npos)
-    {
-      // checks if the string is a number (int)
-      ArithmeticExpression* theConst = new Constant ((int)item);
-      // returns the constant
-      return theConst;
-    }
+        string theV = "";
+      
+        while ((int)variablesStack.size() > 0)
+        {
+          theV+= variablesStack.top();
+          variablesStack.pop();
+        }
+        reverse(theV.begin(), theV.end());
 
-    else if (item.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") == string::npos)
-    {
-      // item exists soley of letters
-      // it is a variable
+        if (theV.find_first_not_of("0123456789") == string::npos)
+        {
+          // string is entirely numbers, thus it is a constant
+          ArithmeticExpression* theConst = new Constant (atoi(theV.c_str()));
+          aeStack.push(theConst);
+       }
+       else
+       {
+         // string is a variable name
+         ArithmeticExpression* theVariable = new Variable (theV);
+          aeStack.push(theVariable);
+       }
+  }
 
-      if (ss.eof())
-      {
-        // not an array
-         ArithmeticExpression* theVariable = new Variable(item);
-        // retuns the variable
-        return theVariable;
-      }
-      else if (ss.peek() == '[')
-      {
-        // array with space between var and []
-        string variableName = item;
-        string thisAEX;
-        getline(ss, thisAEX, ']');
-        thisAEX.substr(1);
-        stringstream ll << thisAEX;
-        ArithmeticExpression* index = readAExpression(ll);
-        // create array object
-      }
+
+  return aeStack.top();
+
+}
+
+
+
+
+
+
+
+
+
+
+
+BooleanExpression* readBExpression (string ss)
+{
+  int found = ss.find("=");
+  ArithmeticExpression* aexpr1;
+  ArithmeticExpression* aexpr2;
+  string a1, a2;
+  BooleanExpression* toReturn;
+
+  
+  if (found != (int) string::npos)
+  {
+    // it is  an = expr
+
+    a1 = ss.substr(0, found);
+    a2 = ss.substr(found+1, ss.length());
+    aexpr1 = readAExpression(a1);
+    aexpr2 = readAExpression(a2);
+    toReturn = new Equal (aexpr1, aexpr2);
+  }
+  else
+  {
+    // not an = expr, see if it is >
+    found = ss.find(">");
+    if (found != (int) string::npos)
+    {
+      // it is a > expr
+      a1 = ss.substr(0, found);
+      a2 = ss.substr(found+1, ss.length());
+      aexpr1 = readAExpression(a1);
+      aexpr2 = readAExpression(a2);
+      // Less than with terms flipped is a greater than!
+      toReturn = new LessThan (aexpr2, aexpr1);
 
     }
     else
     {
-      // item is an Array with no space
-      string variableName = item.substr(0, '[');
+      // not a = OR > expr
+      found = ss.find("<");
+      if (found != (int) string::npos)
+      {
+        // is a < expression
 
+
+        a1 = ss.substr(0, found);
+        a2 = ss.substr(found+1, ss.length());
+        
+        aexpr1 = readAExpression(a1);
+        aexpr2 = readAExpression(a2);
+        toReturn = new LessThan (aexpr1, aexpr2);
+      }
+      else
+      {
+        // NOT a =, > OR < expr
+        cerr << "No comparison for boolean expression" << endl;
+        // potential throw exception so line # can be printed
+        toReturn = NULL;
+      }
     }
   }
 
-  while (item << ss)
-  {
-    
-    if (item.find_first_not_of("0123456789") == string::npos)
-    {
-      // checks if the string is a number (int)
-      ArithmeticExpression* theConst = new Constant ((int)item);
-      // pushes the constant on the stack
-      theStack.push(theConst);
-    }
-
-    else if (item.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") == string::npos)
-    {
-      // item exists soley of letters
-      // it is a variable
-      ArithmeticExpression* theVariable = new Variable(item);
-      // pushes the variable on the stackn
-      theStack.push(theVariable);
-
-    }
-
-    else
-    {
-      // item is an operator
-
-      // push operator on stack as an indicator
-      ArithmeticExpression* openParen = new Variable(item);
-
-
-    }
-  }
-  */
+  return toReturn;
 }

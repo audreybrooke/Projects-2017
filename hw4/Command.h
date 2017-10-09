@@ -1,5 +1,8 @@
 #include <iostream>
 #include <string>
+#include "BooleanExpression.h"
+#include "LineNumber.h"
+
 
 class Command {
   // abstract class for a BASIC Command
@@ -7,6 +10,14 @@ class Command {
  public:
   virtual void print (std::ostream & o) const = 0;
   // pure virtual print function. Don't implement!
+};
+
+struct Line
+{
+  LineNumber* ln;
+  Command* com;
+  Line (LineNumber* theNum, Command* theCom);
+  ~Line();
 };
 
 // add below other classes that are needed

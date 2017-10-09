@@ -1,4 +1,5 @@
 #include <iostream>
+#include "ArithmeticExpression.h"
 
 // This file is for classes that have to do with Boolean expressions
 
