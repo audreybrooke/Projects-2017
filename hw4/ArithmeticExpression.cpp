@@ -1,6 +1,13 @@
 // Addition
 #include "ArithmeticExpression.h"
 
+
+ArithmeticExpression::~ArithmeticExpression()
+{
+  
+}
+
+
 Addition::Addition (ArithmeticExpression *ae1, ArithmeticExpression *ae2)
 {
   _ae1 = ae1;
@@ -97,6 +104,11 @@ Constant::Constant (int value)
 {
   _value = value;
 }
+
+Constant::~Constant()
+{
+
+}
   
 void Constant::print (std::ostream & o) const
 {
@@ -109,11 +121,18 @@ Variable::Variable (string vName)
 {
   variable = vName;
 }
+
+Variable::~Variable()
+{
+  
+}
   
 void Variable::print (std::ostream & o) const
 {
   o << variable;
 }
+
+// ArrayVariable
 
 ArrayVariable::ArrayVariable (string vName, ArithmeticExpression *ae1)
 {

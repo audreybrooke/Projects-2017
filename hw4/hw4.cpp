@@ -52,7 +52,7 @@ int main(int argc, char* argv[])
     ss >> command;
     LineNumber* tLine = new LineNumber(line);
 
-    cout << "On line: " << line << endl;
+    //cout << "On line: " << line << endl;
 
 
     if (command == "PRINT") {
@@ -249,7 +249,7 @@ ArithmeticExpression* readAExpression (string ss)
 
       reverse(theV.begin(), theV.end());
       arrayVariableName.push(theV);
-      cout << "pushed array name on stack" << endl;
+      // cout << "pushed array name on stack" << endl;
 
 
       // push [ on char stack to signify that the expression until ]
@@ -373,10 +373,10 @@ ArithmeticExpression* readAExpression (string ss)
         aeStack.pop();
 
         // cout << endl << "arrray name is: " << arrayVariableName << endl;
-        cout << "trying to create theArray object" << endl;
+        // cout << "trying to create theArray object" << endl;
         ArithmeticExpression* theArray = new ArrayVariable (arrayVariableName.top(), index);
         arrayVariableName.pop();
-        cout << "created theArray object" << endl;
+        // cout << "created theArray object" << endl;
         aeStack.push(theArray);
       }
     }

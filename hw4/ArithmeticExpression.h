@@ -9,6 +9,7 @@ class ArithmeticExpression {
   // abstract class for an arithmetic expression
 
  public:
+  virtual ~ArithmeticExpression ()=0;
   virtual void print (std::ostream & o) const = 0;
   // pure virtual print function. Don't implement!
 };

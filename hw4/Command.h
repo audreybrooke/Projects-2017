@@ -8,6 +8,7 @@ class Command {
   // abstract class for a BASIC Command
 
  public:
+  virtual ~Command()=0;
   virtual void print (std::ostream & o) const = 0;
   // pure virtual print function. Don't implement!
 };

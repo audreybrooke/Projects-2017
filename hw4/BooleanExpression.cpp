@@ -2,7 +2,13 @@
 
 using namespace std;
 
+
 // Equal
+
+BooleanExpression::~BooleanExpression()
+{
+
+}
 
 Equal::Equal (ArithmeticExpression *ae1, ArithmeticExpression *ae2)
 {

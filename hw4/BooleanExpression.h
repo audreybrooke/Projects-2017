@@ -7,6 +7,7 @@ class BooleanExpression {
   // abstract class for a Boolean expression
 
  public:
+  virtual ~BooleanExpression()=0;
   virtual void print (std::ostream & o) const = 0;
   // pure virtual print function. Don't implement!
 };

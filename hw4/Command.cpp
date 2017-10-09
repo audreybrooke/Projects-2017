@@ -2,6 +2,12 @@
 
 using namespace std;
 
+Command::~Command()
+{
+  
+}
+
+
 // Line
 
   Line::Line (LineNumber* theNum, Command* theCom)
@@ -151,9 +157,19 @@ Return_Command::Return_Command()
 
 }
 
+Return_Command::~Return_Command()
+{
+
+}
+
 // End_Command
 
 End_Command::End_Command()
+{
+  
+}
+
+End_Command::~End_Command()
 {
   
 }
