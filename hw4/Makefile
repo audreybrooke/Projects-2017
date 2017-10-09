@@ -17,6 +17,9 @@ LineNumber.o: LineNumber.cpp LineNumber.h
 
 clean:
 	rm -f ArithmeticExpression.o
+	rm -f BooleanExpression.o
+	rm -f Command.o
+	rm -f LineNumber.o
 	rm -f hw4
 
 
