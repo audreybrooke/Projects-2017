@@ -1,4 +1,5 @@
 // Addition
+#include "ArithmeticExpression.h"
 
 Addition::Addition (ArithmeticExpression *ae1, ArithmeticExpression *ae2)
 {
@@ -85,7 +86,7 @@ void Division::print (std::ostream & o) const
 {
   o << "(";
   _ae1->print (o);
-  o << " * ";
+  o << " / ";
   _ae2->print (o);
   o << ")";
 }
@@ -112,4 +113,22 @@ Variable::Variable (string vName)
 void Variable::print (std::ostream & o) const
 {
   o << variable;
+}
+
+ArrayVariable::ArrayVariable (string vName, ArithmeticExpression *ae1)
+{
+  variable = vName;
+  _ae1 = ae1;
+}
+
+ArrayVariable::~ArrayVariable()
+{
+  delete _ae1;
+}
+  
+void ArrayVariable::print (std::ostream & o) const
+{
+  o << variable << "[";
+  _ae1->print(o);
+  o << "]";
 }

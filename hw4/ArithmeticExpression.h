@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 
+using namespace std;
+
 // This file is for classes that have to do with arithmetic expressions
 
 class ArithmeticExpression {
@@ -93,4 +95,19 @@ class Variable : public ArithmeticExpression {
   
  private:
   string variable; // the value of the constant
+};
+
+// Array Variable
+
+class ArrayVariable : public ArithmeticExpression {
+ public:
+  ArrayVariable (string vName, ArithmeticExpression *ae1);
+  ~ArrayVariable ();
+  
+  virtual void print (std::ostream & o) const;
+  // because the class is not abstract, we must implement print
+  
+ private:
+  string variable; // the value of the constant
+  ArithmeticExpression *_ae1; // index
 };
