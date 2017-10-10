@@ -4,7 +4,7 @@ using namespace std;
 
 Command::~Command()
 {
-  
+  // cout << "deleting command" << endl;
 }
 
 
@@ -134,7 +134,8 @@ Gosub_Command::Gosub_Command (LineNumber *num1, LineNumber *num2)
 
 Gosub_Command::~Gosub_Command ()
 {
-  delete _num1;
+  // delete _num1;
+  // don't delete num1 because the Line destructor will delete it
   delete _num2;
 }
   

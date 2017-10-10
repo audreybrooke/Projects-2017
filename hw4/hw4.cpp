@@ -183,6 +183,17 @@ int main(int argc, char* argv[])
     cout << endl;
   }
 
+  
+  int counter = theProgram.size();
+
+  
+  while (theProgram.size() > 0)
+  {
+    Line* toDelete = theProgram[counter-1];
+    theProgram.pop_back();
+    delete toDelete;
+    counter--;
+  }
 
   
   return 0;
@@ -453,8 +464,9 @@ ArithmeticExpression* readAExpression (string ss)
        }
   }
 
+  ArithmeticExpression* toReturn = aeStack.top();
 
-  return aeStack.top();
+  return toReturn;
 
 }
 

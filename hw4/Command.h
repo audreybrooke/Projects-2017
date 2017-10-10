@@ -13,12 +13,14 @@ class Command {
   // pure virtual print function. Don't implement!
 };
 
-struct Line
+class Line
 {
-  LineNumber* ln;
-  Command* com;
+
+public:
   Line (LineNumber* theNum, Command* theCom);
   ~Line();
+  LineNumber* ln;
+  Command* com;
 };
 
 // add below other classes that are needed
