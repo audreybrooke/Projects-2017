@@ -37,5 +37,6 @@ void Interpreter::runProgram()
 	while (theIterator != theProgram.end())
 	{
 		*theIterator -> com -> execute(this);
+		// send ostream, variableMap, returnStack and iterator by reference
 	}	
 }
