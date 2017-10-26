@@ -6,6 +6,23 @@
 
 using namespace std;
 
+void moveToLine (vector<Line*> &prg, vector<Line*>::iterator &it, int goTo)
+{
+  // cout << "entering moveToLine" << endl;
+  for (it = prg.begin(); it != prg.end(); it++)
+  {
+    Line* thisLine= *it;
+    if (thisLine -> ln -> line == goTo)
+    {
+      // found the location to jump to, leave iterator here
+      // cout << "Found line number: " << goTo << endl;
+      return;
+    }
+  }
+
+  // line number not found!
+  // THROW EXCEPTION!
+}
 
 
 Command::~Command()
@@ -45,9 +62,10 @@ void Print_Command::print (std::ostream & o) const
   _ae1->print (o);
 }
 
-void Print_Command::execute(Interpreter &theI)
+void Print_Command::execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream)
 {
-  (theI.outputStream) << _ae1 -> getValue();
+  (outStream) << (_ae1 -> getValue(varMap)) << endl;
+  theIt++;
 }
 
 // LetConst_Command
@@ -69,10 +87,17 @@ void LetConst_Command::print (std::ostream & o) const
   _ae1->print (o);
 }
 
-void LetConst_Command::execute(Interpreter &theI) 
+void LetConst_Command:: execute (vector<Line*> &program, map<string,int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream) 
 {
   // add/replace a variable to map with specific value
-  theI.variableMap[variable] = _ae1;
+  // cout << "In LetConst execute" << endl;
+
+  // check if variable is already in map???
+
+  // map should have ints not expressions!
+
+  varMap[variable] = _ae1 -> getValue(varMap);
+  theIt++;
 }
 
 // LetArray_Command
@@ -98,9 +123,10 @@ void LetArray_Command::print (std::ostream & o) const
   _ae2->print (o);
 }
 
-void LetArray_Command::execute(Interpreter &theI) 
+void LetArray_Command::execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream) 
 {
   // FILL IN when array plan is made
+  theIt++;
 }
 
 
@@ -123,10 +149,11 @@ void Goto_Command::print (std::ostream & o) const
   o << ">";
 }
 
-void Goto_Command::execute(Interpreter &theI)
+void Goto_Command::execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream)
 {
   // move iterator to the point that matches the given line
-  theI.moveToLine(_num->line);
+  moveToLine(program, theIt, _num->line);
+  // cout << "returned from moveToLine" << endl;
 
 }
 
@@ -154,12 +181,19 @@ void IfThen_Command::print (std::ostream & o) const
   o << ">";
 }
 
-void IfThen_Command::execute(Interpreter &theI)
+void IfThen_Command:: execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream)
 {
+  // cout << "Entering If execute" << endl;
   // if the boolean expression results to true, move the iterator
-  if (_be1 -> getValue())
+  if (_be1 -> getValue(varMap))
   {
-    theI.moveToLine(_num->line);
+    // cout << "about to call MoveToLine in IFTHEN" << endl;
+    moveToLine(program, theIt, _num->line);
+    // cout << "iterator moved" << endl;
+  }
+  else
+  {
+      theIt++;
   }
 }
 
@@ -187,11 +221,11 @@ void Gosub_Command::print (std::ostream & o) const
   o << ">";
 }
 
-void Gosub_Command::execute(Interpreter &theI)
+void Gosub_Command:: execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream)
 {
   // put the line you came from on return stack and go to indidcated line
-  theI.returnStack.push(_num1);
-  theI.moveToLine(_num2->line);
+  retStack.push(_num1);
+  moveToLine(program, theIt, _num2->line);
 }
 
 // Return_Command
@@ -211,14 +245,14 @@ Return_Command::~Return_Command()
 
 }
 
-void Return_Command::execute(Interpreter &theI)
+void Return_Command:: execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream)
 {
   // go to the the line AFTER the most recent GOSUB line
   // find and remove the last gosub from the stack
-  LineNumber* lastGoSub = theI.returnStack.top();
-  theI.returnStack.pop();
-  theI.moveToLine(lastGoSub->line);
-  theI.theIterator++;
+  LineNumber* lastGoSub = retStack.top();
+  retStack.pop();
+  moveToLine(program, theIt, lastGoSub->line);
+  theIt++;
 }
 
 // End_Command
@@ -238,10 +272,11 @@ void End_Command::print (std::ostream & o) const
 	o << "END";
 }
 
-void End_Command::execute(Interpreter &theI)
+void End_Command::execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream)
 {
   // terminate program
-  if (++(theI.theIterator) == theI.theProgram.end())
+  theIt++;
+  if (theIt == program.end())
   {
     // the program is over...
   }

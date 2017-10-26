@@ -1,7 +1,7 @@
 all: hw5
 
-hw5: hw5.cpp ArithmeticExpression.o BooleanExpression.o Command.o LineNumber.o
-	g++ -g -Wall ArithmeticExpression.o BooleanExpression.o Command.o LineNumber.o hw5.cpp -o hw5
+hw5: hw5.cpp ArithmeticExpression.o BooleanExpression.o Command.o LineNumber.o Interpreter.o
+	g++ -g -Wall ArithmeticExpression.o BooleanExpression.o Command.o LineNumber.o Interpreter.o hw5.cpp -o hw5
 
 ArithmeticExpression.o: ArithmeticExpression.cpp ArithmeticExpression.h
 	g++ -g -Wall -c ArithmeticExpression.cpp -o ArithmeticExpression.o
@@ -14,6 +14,9 @@ Command.o: Command.cpp Command.h
 
 LineNumber.o: LineNumber.cpp LineNumber.h
 	g++ -g -Wall -c LineNumber.cpp -o LineNumber.o
+
+Interpreter.o: Interpreter.cpp Interpreter.h
+	g++ -g -Wall -c Interpreter.cpp -o Interpreter.o
 
 clean:
 	rm -f ArithmeticExpression.o

@@ -184,8 +184,8 @@ int main(int argc, char* argv[])
   }
 
   // run through program and execute commands, output goes to cout
-  Interpreter* interpretProgram = new Interpreter(theProgram, cout);
-  interpretProgram -> runProgram();
+  Interpreter* interpretProgram = new Interpreter(theProgram);
+  interpretProgram -> runProgram(cout);
 
 
 

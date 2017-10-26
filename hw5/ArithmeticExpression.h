@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <map>
 
 using namespace std;
 
@@ -11,7 +12,7 @@ class ArithmeticExpression {
  public:
   virtual ~ArithmeticExpression ()=0;
   virtual void print (std::ostream & o) const = 0;
-  virtual int getValue () const = 0;
+  virtual int getValue (map<string, int> &variableMap) = 0;
   // friend class Interpreter;
   // pure virtual print function. Don't implement!
 };
@@ -26,7 +27,7 @@ class Addition : public ArithmeticExpression {
   ~Addition ();
   
   virtual void print (std::ostream & o) const;
-  virtual int getValue () const;
+  virtual int getValue (map<string, int> &variableMap);
   // because the class is not abstract, we must implement print
   
  private:
@@ -41,7 +42,7 @@ class Subtraction : public ArithmeticExpression {
   ~Subtraction ();
   
   virtual void print (std::ostream & o) const;
-  virtual int getValue () const;
+  virtual int getValue (map<string, int> &variableMap);
   // because the class is not abstract, we must implement print
   
  private:
@@ -54,7 +55,7 @@ class Multiplication : public ArithmeticExpression {
   ~Multiplication ();
   
   virtual void print (std::ostream & o) const;
-  virtual int getValue () const;
+  virtual int getValue (map<string,int> &variableMap);
   // because the class is not abstract, we must implement print
   
  private:
@@ -69,7 +70,7 @@ class Division : public ArithmeticExpression {
   ~Division ();
   
   virtual void print (std::ostream & o) const;
-  virtual int getValue () const;
+  virtual int getValue (map<string, int> &variableMap);
   // because the class is not abstract, we must implement print
   
  private:
@@ -84,7 +85,7 @@ class Constant : public ArithmeticExpression {
   ~Constant ();
   
   virtual void print (std::ostream & o) const;
-  virtual int getValue () const;
+  virtual int getValue (map<string,int> &variableMap);
   // because the class is not abstract, we must implement print
   
  private:
@@ -99,7 +100,7 @@ class Variable : public ArithmeticExpression {
   ~Variable ();
   
   virtual void print (std::ostream & o) const;
-  virtual int getValue () const;
+  virtual int getValue (map<string, int> &variableMap);
   // because the class is not abstract, we must implement print
   
  private:
@@ -114,7 +115,7 @@ class ArrayVariable : public ArithmeticExpression {
   ~ArrayVariable ();
   
   virtual void print (std::ostream & o) const;
-  virtual int getValue () const;
+  virtual int getValue (map<string, int> &variableMap);
   // because the class is not abstract, we must implement print
   
  private:

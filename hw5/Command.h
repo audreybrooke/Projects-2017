@@ -1,3 +1,7 @@
+#ifndef COMMAND_H
+#define COMMAND_H
+
+
 #include <iostream>
 #include <string>
 #include "BooleanExpression.h"
@@ -5,6 +9,7 @@
 #include "Interpreter.h"
 
 class Interpreter;
+class Line;
 
 
 class Command {
@@ -13,7 +18,11 @@ class Command {
  public:
   virtual ~Command()=0;
   virtual void print (std::ostream & o) const = 0;
-  virtual void execute (Interpreter &theI) = 0;
+  virtual void execute (vector<Line*> &program, 
+    map<string, int> &varMap, 
+    stack<LineNumber*> &retStack, 
+    vector<Line*>::iterator &theIt, 
+    std::ostream &outStream) = 0;
   friend class Interpreter;
   // pure virtual print function. Don't implement!
 };
@@ -38,7 +47,7 @@ class Print_Command : public Command {
   ~Print_Command ();
   
   virtual void print (std::ostream & o) const;
-  virtual void execute(Interpreter &theI);
+  virtual void execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream);
   // because the class is not abstract, we must implement print
   
  private:
@@ -53,7 +62,7 @@ class LetConst_Command : public Command {
   ~LetConst_Command ();
   
   virtual void print (std::ostream & o) const;
-  virtual void execute(Interpreter &theI);
+  virtual void execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream);
   // because the class is not abstract, we must implement print
   
  private:
@@ -71,7 +80,7 @@ class LetArray_Command : public Command {
   ~LetArray_Command ();
   
   virtual void print (std::ostream & o) const;
-  virtual void execute(Interpreter &theI);
+  virtual void execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream);
   // because the class is not abstract, we must implement print
   
  private:
@@ -87,7 +96,7 @@ class Goto_Command : public Command {
   ~Goto_Command ();
   
   virtual void print (std::ostream & o) const;
-  virtual void execute(Interpreter &theI);
+  virtual void execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream);
   // because the class is not abstract, we must implement print
   
  private:
@@ -102,7 +111,7 @@ class IfThen_Command : public Command {
   ~IfThen_Command ();
   
   virtual void print (std::ostream & o) const;
-  virtual void execute(Interpreter &theI);
+  virtual void execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream);
   // because the class is not abstract, we must implement print
   
  private:
@@ -118,7 +127,7 @@ class Gosub_Command : public Command {
   ~Gosub_Command ();
   
   virtual void print (std::ostream & o) const;
-  virtual void execute(Interpreter &theI);
+  virtual void execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream);
   // because the class is not abstract, we must implement print
   
  private:
@@ -134,7 +143,7 @@ class Return_Command : public Command {
   ~Return_Command ();
   
   virtual void print (std::ostream & o) const;
-  virtual void execute(Interpreter &theI);
+  virtual void execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream);
   // because the class is not abstract, we must implement print
 };
 
@@ -148,6 +157,8 @@ class End_Command : public Command {
   ~End_Command ();
   
   virtual void print (std::ostream & o) const;
-  virtual void execute(Interpreter &theI);
+  virtual void execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream);
   // because the class is not abstract, we must implement print
 };
+
+#endif

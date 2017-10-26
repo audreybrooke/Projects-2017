@@ -31,9 +31,9 @@ void Equal::print (std::ostream & o) const
   o << "]";
 }
 
-bool Equal::getValue() const
+bool Equal::getValue(map<string, int> &variableMap)
 {
-  if (_ae1->getValue() == _ae2->getValue())
+  if (_ae1->getValue(variableMap) == _ae2->getValue(variableMap))
   {
     return true;
   }
@@ -64,12 +64,16 @@ void LessThan::print (std::ostream & o) const
   o << "]";
 }
 
-bool LessThan::getValue() const
+bool LessThan::getValue(map<string, int> &variableMap)
 {
-  if (_ae1->getValue() < _ae2->getValue())
+  // cout << "in less than get value" << endl;
+
+  if (_ae1->getValue(variableMap) < _ae2->getValue(variableMap))
   {
+    // cout << "returning true" << endl;
     return true;
   }
 
+  // cout << "returning false" << endl;
   return false;
 }

@@ -31,9 +31,9 @@ void Addition::print (std::ostream & o) const
   o << ")";
 }
 
-int Addition::getValue () const
+int Addition::getValue (map<string, int> &variableMap)
 {
-  return _ae1->getValue() + _ae2->getValue();
+  return _ae1->getValue(variableMap) + _ae2->getValue(variableMap);
 }
 
 // Subtraction
@@ -59,9 +59,9 @@ void Subtraction::print (std::ostream & o) const
   o << ")";
 }
 
-int Subtraction::getValue () const
+int Subtraction::getValue (map<string,int> &variableMap)
 {
-  return _ae1->getValue() - _ae2->getValue();
+  return _ae1->getValue(variableMap) - _ae2->getValue(variableMap);
 }
 
 // Multiplication
@@ -87,9 +87,9 @@ void Multiplication::print (std::ostream & o) const
   o << ")";
 }
 
-int Multiplication::getValue () const
+int Multiplication::getValue (map<string, int> &variableMap)
 {
-  return _ae1->getValue() * _ae2->getValue();
+  return _ae1->getValue(variableMap) * _ae2->getValue(variableMap);
 }
 
 // Division
@@ -115,14 +115,14 @@ void Division::print (std::ostream & o) const
   o << ")";
 }
 
-int Division::getValue () const
+int Division::getValue (map<string,int> &variableMap)
 {
-  if (_ae2->getValue() == 0)
+  if (_ae2->getValue(variableMap) == 0)
   {
     // throw exception for divide by 0
   }
 
-  return _ae1->getValue() / _ae2->getValue();
+  return _ae1->getValue(variableMap) / _ae2->getValue(variableMap);
 }
 
 // Constant
@@ -142,7 +142,7 @@ void Constant::print (std::ostream & o) const
   o << _value;
 }
 
-int Constant::getValue () const
+int Constant::getValue (map<string, int> &variableMap)
 {
   return _value;
 }
@@ -167,11 +167,12 @@ void Variable::print (std::ostream & o) const
   o << variable;
 }
 
-int Variable::getValue () const
+int Variable::getValue (map<string, int> &variableMap)
 {
   // CHECK IF variable is even in map!!
+  // uh oh... how?
 
-  return 0;// Interpreter::variableMap[variable];
+  return variableMap[variable];// Interpreter::variableMap[variable];
 }
 
 // ArrayVariable
@@ -194,7 +195,7 @@ void ArrayVariable::print (std::ostream & o) const
   o << "]";
 }
 
-int ArrayVariable::getValue () const
+int ArrayVariable::getValue (map<string, int> &variableMap)
 {
   // use varibale name and value of _ae1
   // if there is no set value for that index, return 0
