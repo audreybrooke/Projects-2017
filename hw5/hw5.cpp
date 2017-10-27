@@ -184,20 +184,20 @@ int main(int argc, char* argv[])
 
   // print out vector of line objects to output file
 
-  ofstream outs ("out.txt");
+  // ofstream outs ("out.txt");
 
   for (int i = 0; i < (int) theProgram.size(); ++i)
   {
     Line* thisLine = theProgram[i];
-    thisLine -> ln -> print(outs);
-    outs << " ";
-    thisLine -> com -> print(outs);
-    outs << endl;
+    thisLine -> ln -> print(cout);
+    cout << " ";
+    thisLine -> com -> print(cout);
+    cout << endl;
   }
 
   // run through program and execute commands, output goes to cout
   Interpreter* interpretProgram = new Interpreter(theProgram);
-  interpretProgram -> runProgram(outs);
+  interpretProgram -> runProgram(cout);
 
 
 
