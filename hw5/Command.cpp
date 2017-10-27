@@ -244,7 +244,7 @@ void IfThen_Command:: execute (vector<Line*> &program, map<string, int> &varMap,
       ss << index;
       string str = ss.str();
 
-      cout << "line number error in IF THEN" << endl;
+      // cout << "line number error in IF THEN" << endl;
 
       throw logic_error ("IF jump to non-existent line " + str + ".");
     }

@@ -79,6 +79,12 @@ int main(int argc, char* argv[])
       char c;
       ss.get(c);
 
+      if (var[var.length()-1] == '[')
+      {
+        c = '[';
+        var = var.substr(0, var.length()-1);
+      }
+
       while (c == ' ')
       {
         // do nothing
@@ -88,6 +94,8 @@ int main(int argc, char* argv[])
 
       if (c == '[')
       {
+
+
 
         // use Let array class
         string tString; // remaining portion of the line
@@ -176,22 +184,28 @@ int main(int argc, char* argv[])
 
   // print out vector of line objects to output file
 
+  ofstream outs ("out.txt");
+
   for (int i = 0; i < (int) theProgram.size(); ++i)
   {
     Line* thisLine = theProgram[i];
-    thisLine -> ln -> print(cout);
-    cout << " ";
-    thisLine -> com -> print(cout);
-    cout << endl;
+    thisLine -> ln -> print(outs);
+    outs << " ";
+    thisLine -> com -> print(outs);
+    outs << endl;
   }
 
   // run through program and execute commands, output goes to cout
   Interpreter* interpretProgram = new Interpreter(theProgram);
-  interpretProgram -> runProgram(cout);
+  interpretProgram -> runProgram(outs);
+
 
 
 
   // memory handling
+
+  delete interpretProgram;
+
   int counter = theProgram.size();
 
   while (theProgram.size() > 0)
