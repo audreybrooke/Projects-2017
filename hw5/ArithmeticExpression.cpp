@@ -120,7 +120,7 @@ int Division::getValue (map<string,int> &variableMap, map<string, map<int, int> 
 {
   if (_ae2->getValue(variableMap, arrayVariableMap, arrNameSet) == 0)
   {
-    // throw exception for divide by 0
+    throw divide_by_zero("Division by 0.");
   }
 
   return _ae1->getValue(variableMap, arrayVariableMap, arrNameSet) / _ae2->getValue(variableMap, arrayVariableMap, arrNameSet);

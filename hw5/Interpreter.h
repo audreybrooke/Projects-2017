@@ -24,15 +24,7 @@ class end_call
     string msg;
 };
 
-class divide_by_zero
-{
-  public:
-    divide_by_zero(const string m="Division By Zero"):msg(m){}
-     ~divide_by_zero(){}
-    const char* what(){return msg.c_str();}
-  private:
-    string msg;
-};
+
 
 
 class Interpreter {

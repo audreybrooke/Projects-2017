@@ -5,6 +5,17 @@
 
 using namespace std;
 
+
+class divide_by_zero
+{
+  public:
+    divide_by_zero(const string m="Division By Zero"):msg(m){}
+     ~divide_by_zero(){}
+    const char* what(){return msg.c_str();}
+  private:
+    string msg;
+};
+
 // This file is for classes that have to do with arithmetic expressions
 
 class ArithmeticExpression {

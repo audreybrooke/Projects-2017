@@ -145,7 +145,7 @@ int main(int argc, char* argv[])
 
       string tString; // remaining portion of the line
       getline (ss, tString);
-      int found = tString.find("THEN");
+      int found = tString.find("THEN ");
       string be = tString.substr(0, found);
       string goToLine = tString.substr(found+4, tString.length());
       LineNumber* goToLineNumberObj = new LineNumber (atoi(goToLine.c_str()));
