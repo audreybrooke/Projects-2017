@@ -38,7 +38,7 @@ class Interpreter {
   // void moveToLine(int goTo);
   // runs the program
 
-  friend class Command;
+  // friend class Command;
 
 private:
   vector<Line*> theProgram; // the commands and their line numbers in order
