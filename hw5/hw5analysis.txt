@@ -1,1 +1,58 @@
 Audrey Brooke
+
+Variables:
+	n = number of lines of BASIC code (lines in input file)
+	m = number of existing constant variables
+	a = number of arrays (different array names)
+	Ai = number of instantiated values of array a
+
+Runtimes:
+
+	Jump to a line (IF THEN, GOSUB and GOTO):
+
+		I created a function in Command.cpp on lines 11-36 that takes in as parameters an int
+		line number, reference to a vector containing all the commands and their line number
+		Line) and a reference to the iterator of the vector that is being used to determine
+		the Line (and given command) being run. It runs in O(n) time because it iterates from the
+		first Line to last looking for the given LineNumber. If it never finds the line, then it
+		throws an error and has checked all n lines. The other lines in the execute
+		functions of IF, GOSUB and GOTO run in O(1) time.  (If the Lines were held in a map
+		instead of a stack, then they could be found in O(logn) time but a vector is a more
+		reasonalbe data structure because it is meant to keep the lines in order. Although the
+		STL C++ map would keep the Lines in order, this is not necessarily true for other types
+		of maps or languages.)
+
+
+	Return:
+
+		On lines 317-331 of Command.cpp is the execute function for the return command. It takes
+		O(1) time to determine the line number to go to and calls the above described function to
+		move the iterator to that line and find the correct command. So, finding the line number
+		takes O(1) time because the GOSUB lines are held in a stack, which pushes and pops in 
+		O(1) time. (Technically the push happens in GOSUB execute, not RETURN.) Executing the
+		correct line takes O(n) time because it is O(1) + O(n).
+
+	Determining or overriding value of a variable:
+
+		Variables are held in a map which is passed by reference to the execute functions and
+		the getValue functions. So for each function to determine the value of a variable they
+		use the run time of returning something from a map, O(log m), since m is the size of the 
+		map. This happens on line 111 of Command.cpp and 176 of ArithmeticExpression.cpp.
+
+	Determining value of array entry:
+
+		The array values are stored in a Map with a string key representing the array name and
+		the value is a map representing the indecies and their values in that array. Thus, the
+		"inner" map has an int key representing the index and a int value representing the value
+		of the array at that index. This map is passed by reference to the getValue function and 
+		used in lines 199-221 of ArithmeticExpression.cpp. So, the runtime of determining if the 
+		array has been created is O(log a). If an array is not in the map then the function 
+		returns 0 at this time and the runtime was O(log a), because a is the number of entries 
+		in the "outer"map. If the array name does exist, then it tries to find the given index in 
+		the "inner" map. So the run time is O(log a) + O(log Ai) where Ai is the number of 
+		indecies that have been given a value already aka the size of the inner map. Whether or 
+		not the value exists, the remaining lines use some number of O(log a + log Ai) becuase of
+		the double brackets. One bracket searches the number of arrays (a) and the other searches
+		the indecies existing indecies in that array (Ai). So the runtime of finding a value in an
+		array that has been initialized is O (log a + log Ai). The LETARRAY_COMMAND execute
+		function (lines 138-145 of Command.cpp) also runs in O(log a + log Ai) by the same logic.

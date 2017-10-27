@@ -140,26 +140,7 @@ void LetArray_Command::execute (vector<Line*> &program, map<string, int> &varMap
   int index = _ae1 -> getValue(varMap, arrVarMap, arrName);
 
   arrVarMap[variable][index] = _ae2 -> getValue(varMap, arrVarMap, arrName);
-
-  /*
-  // FILL IN when array plan is made
-  int index = _ae1 -> getValue(varMap, arrVarMap, arrName);
-  stringstream ss;
-  ss << index;
-  string str = ss.str();
-  string theKey = variable + "[" + str + "]";
-
-  // cout << "created variable: " << theKey << " with value: " << _ae2 -> getValue(varMap, arrVarMap, arrName) << endl;
-
-  arrVarMap[theKey] = _ae2 -> getValue(varMap, arrVarMap, arrName);
-
-  // cout << "Inserting " << variable << " to arrName set" << endl;
-
-  arrName.insert(variable);
-
-  // cout << "Is " << variable << " in the set? " << (arrName.count(variable) != 0) << endl;
-
-  */
+  
   theIt++;
 }
 
@@ -197,7 +178,7 @@ void Goto_Command::execute (vector<Line*> &program, map<string, int> &varMap, st
     ss << index;
     string str = ss.str();
 
-    throw logic_error("GOSUB to non-existent line " + str + ".");
+    throw logic_error("GOTO to non-existent line " + str + ".");
   }
 
 }
