@@ -9,7 +9,7 @@ class BooleanExpression {
  public:
   virtual ~BooleanExpression()=0;
   virtual void print (std::ostream & o) const = 0;
-  virtual bool getValue(map<string, int> &variableMap) = 0;
+  virtual bool getValue(map<string, int> &variableMap, map<string, map <int, int> > &arrayVariableMap, set<string> &arrNameSet) = 0;
   // pure virtual print function. Don't implement!
 };
 
@@ -23,7 +23,7 @@ class Equal : public BooleanExpression {
   ~Equal ();
   
   virtual void print (std::ostream & o) const;
-  virtual bool getValue(map<string, int> &variableMap);
+  virtual bool getValue(map<string, int> &variableMap, map<string, map <int, int> > &arrayVariableMap, set<string> &arrNameSet);
   // because the class is not abstract, we must implement print
   
  private:
@@ -38,7 +38,7 @@ class LessThan : public BooleanExpression {
   ~LessThan ();
   
   virtual void print (std::ostream & o) const;
-  virtual bool getValue(map<string, int> &variableMap);
+  virtual bool getValue(map<string, int> &variableMap, map<string, map <int, int> > &arrayVariableMap, set<string> &arrNameSet);
   // because the class is not abstract, we must implement print
   
  private:

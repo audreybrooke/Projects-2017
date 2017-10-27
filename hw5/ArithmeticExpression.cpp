@@ -1,4 +1,5 @@
 #include "ArithmeticExpression.h"
+#include <sstream>
 
 // class Interpreter;
 
@@ -31,9 +32,9 @@ void Addition::print (std::ostream & o) const
   o << ")";
 }
 
-int Addition::getValue (map<string, int> &variableMap)
+int Addition::getValue (map<string, int> &variableMap, map<string, map<int, int> > &arrayVariableMap, set<string> &arrNameSet)
 {
-  return _ae1->getValue(variableMap) + _ae2->getValue(variableMap);
+  return _ae1->getValue(variableMap, arrayVariableMap, arrNameSet) + _ae2->getValue(variableMap, arrayVariableMap, arrNameSet);
 }
 
 // Subtraction
@@ -59,9 +60,9 @@ void Subtraction::print (std::ostream & o) const
   o << ")";
 }
 
-int Subtraction::getValue (map<string,int> &variableMap)
+int Subtraction::getValue (map<string, int> &variableMap, map<string, map<int, int> > &arrayVariableMap, set<string> &arrNameSet)
 {
-  return _ae1->getValue(variableMap) - _ae2->getValue(variableMap);
+  return _ae1->getValue(variableMap, arrayVariableMap, arrNameSet) - _ae2->getValue(variableMap, arrayVariableMap, arrNameSet);
 }
 
 // Multiplication
@@ -87,9 +88,9 @@ void Multiplication::print (std::ostream & o) const
   o << ")";
 }
 
-int Multiplication::getValue (map<string, int> &variableMap)
+int Multiplication::getValue (map<string, int> &variableMap, map<string, map<int, int> > &arrayVariableMap, set<string> &arrNameSet)
 {
-  return _ae1->getValue(variableMap) * _ae2->getValue(variableMap);
+  return _ae1->getValue(variableMap, arrayVariableMap, arrNameSet) * _ae2->getValue(variableMap, arrayVariableMap, arrNameSet);
 }
 
 // Division
@@ -115,14 +116,14 @@ void Division::print (std::ostream & o) const
   o << ")";
 }
 
-int Division::getValue (map<string,int> &variableMap)
+int Division::getValue (map<string,int> &variableMap, map<string, map<int, int> > &arrayVariableMap, set<string> &arrNameSet)
 {
-  if (_ae2->getValue(variableMap) == 0)
+  if (_ae2->getValue(variableMap, arrayVariableMap, arrNameSet) == 0)
   {
     // throw exception for divide by 0
   }
 
-  return _ae1->getValue(variableMap) / _ae2->getValue(variableMap);
+  return _ae1->getValue(variableMap, arrayVariableMap, arrNameSet) / _ae2->getValue(variableMap, arrayVariableMap, arrNameSet);
 }
 
 // Constant
@@ -142,7 +143,7 @@ void Constant::print (std::ostream & o) const
   o << _value;
 }
 
-int Constant::getValue (map<string, int> &variableMap)
+int Constant::getValue (map<string, int> &variableMap, map<string, map<int, int> > &arrayVariableMap, set<string> &arrNameSet)
 {
   return _value;
 }
@@ -167,7 +168,7 @@ void Variable::print (std::ostream & o) const
   o << variable;
 }
 
-int Variable::getValue (map<string, int> &variableMap)
+int Variable::getValue (map<string, int> &variableMap, map<string, map<int, int> > &arrayVariableMap, set<string> &arrNameSet)
 {
   // CHECK IF variable is even in map!!
   // uh oh... how?
@@ -195,11 +196,65 @@ void ArrayVariable::print (std::ostream & o) const
   o << "]";
 }
 
-int ArrayVariable::getValue (map<string, int> &variableMap)
+int ArrayVariable::getValue (map<string, int> &variableMap, map<string, map<int, int> > &arrayVariableMap, set<string> &arrNameSet)
 {
+
+  if (arrayVariableMap.find(variable) != arrayVariableMap.end())
+  {
+    // this array exists
+    int index = _ae1 -> getValue(variableMap, arrayVariableMap, arrNameSet);
+    if (arrayVariableMap[variable].find(index) != arrayVariableMap[variable].end())
+    {
+      // this specific index exists
+      return arrayVariableMap[variable][index];
+    }
+    else
+    {
+      // this specific index does not exist
+      arrayVariableMap[variable][index] = 0;
+      return 0;
+    }
+  }
+
+  // array does not exist yet... exception?
+
+  return 0;
+
+
+
+
+
+
   // use varibale name and value of _ae1
   // if there is no set value for that index, return 0
   // !!!! NEEDS TO BE FIXED !!!! 
+/*
+  int index = _ae1 -> getValue(variableMap, arrayVariableMap, arrNameSet);
+  stringstream ss;
+  ss << index;
+  string str = ss.str();
+  string theKey = variable + "[" + str + "]";
 
+  cout << "searching for key: " << theKey << endl;
+
+  cout << "Does arrayname set contain " << variable << endl;
+
+  if (arrNameSet.count(variable) != 0)
+  {
+    // array exists
+    cout << "this array exists" << endl;
+    if (arrayVariableMap.find(theKey) != arrayVariableMap.end())
+    {
+      // specific idex has been added
+      cout << "this index exists" << endl;
+      return arrayVariableMap[theKey];
+    }
+    // specific index was not added
+    cout << "this index does not exist yet" << endl;
+    return 0;
+  } 
+
+  // Array does not exist!!
   return 0;
+  */
 }

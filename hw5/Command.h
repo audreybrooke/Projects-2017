@@ -22,7 +22,9 @@ class Command {
     map<string, int> &varMap, 
     stack<LineNumber*> &retStack, 
     vector<Line*>::iterator &theIt, 
-    std::ostream &outStream) = 0;
+    std::ostream &outStream,
+    set<string> &arrName,
+    map<string, map<int, int> > &arrVarMap) = 0;
   friend class Interpreter;
   // pure virtual print function. Don't implement!
 };
@@ -47,7 +49,7 @@ class Print_Command : public Command {
   ~Print_Command ();
   
   virtual void print (std::ostream & o) const;
-  virtual void execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream);
+  virtual void execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream, set<string> &arrName, map<string, map<int, int> > &arrVarMap);
   // because the class is not abstract, we must implement print
   
  private:
@@ -62,7 +64,7 @@ class LetConst_Command : public Command {
   ~LetConst_Command ();
   
   virtual void print (std::ostream & o) const;
-  virtual void execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream);
+  virtual void execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream, set<string> &arrName, map<string, map<int, int> > &arrVarMap);
   // because the class is not abstract, we must implement print
   
  private:
@@ -80,7 +82,7 @@ class LetArray_Command : public Command {
   ~LetArray_Command ();
   
   virtual void print (std::ostream & o) const;
-  virtual void execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream);
+  virtual void execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream, set<string> &arrName, map<string, map<int, int> > &arrVarMap);
   // because the class is not abstract, we must implement print
   
  private:
@@ -96,7 +98,7 @@ class Goto_Command : public Command {
   ~Goto_Command ();
   
   virtual void print (std::ostream & o) const;
-  virtual void execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream);
+  virtual void execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream, set<string> &arrName, map<string, map<int, int> > &arrVarMap);
   // because the class is not abstract, we must implement print
   
  private:
@@ -111,7 +113,7 @@ class IfThen_Command : public Command {
   ~IfThen_Command ();
   
   virtual void print (std::ostream & o) const;
-  virtual void execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream);
+  virtual void execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream, set<string> &arrName, map<string, map<int, int> > &arrVarMap);
   // because the class is not abstract, we must implement print
   
  private:
@@ -127,7 +129,7 @@ class Gosub_Command : public Command {
   ~Gosub_Command ();
   
   virtual void print (std::ostream & o) const;
-  virtual void execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream);
+  virtual void execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream, set<string> &arrName, map<string, map<int, int> > &arrVarMap);
   // because the class is not abstract, we must implement print
   
  private:
@@ -143,7 +145,7 @@ class Return_Command : public Command {
   ~Return_Command ();
   
   virtual void print (std::ostream & o) const;
-  virtual void execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream);
+  virtual void execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream, set<string> &arrName, map<string, map<int, int> > &arrVarMap);
   // because the class is not abstract, we must implement print
 };
 
@@ -157,8 +159,19 @@ class End_Command : public Command {
   ~End_Command ();
   
   virtual void print (std::ostream & o) const;
-  virtual void execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream);
+  virtual void execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream, set<string> &arrName, map<string, map<int, int> > &arrVarMap);
   // because the class is not abstract, we must implement print
+};
+
+
+class line_number_error
+{
+  public:
+    line_number_error(const string m=""):msg(m){}
+    ~line_number_error(){}
+    const char* what(){return msg.c_str();}
+  private:
+    string msg;
 };
 
 #endif

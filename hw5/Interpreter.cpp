@@ -1,6 +1,10 @@
 #include "Interpreter.h"
+#include <exception>
+#include <stdexcept>
+#include <sstream>
 
 using namespace std;
+
 
 Interpreter::Interpreter(vector<Line*> prg)
 {
@@ -33,9 +37,39 @@ void Interpreter::runProgram(std::ostream& out)
 	// set iterator to the begining of the program (first line)
 	theIterator = theProgram.begin();
 
-	while (theIterator != theProgram.end())
-	{
-		(*theIterator) -> com -> execute(theProgram, variableMap, returnStack, theIterator, out);
-		// send ostream, variableMap, returnStack and iterator by reference
-	}	
+	try{
+
+		while (theIterator != theProgram.end())
+		{
+			(*theIterator) -> com -> execute(theProgram, variableMap, returnStack, theIterator, out, arrayNames, arrayVariableMap);
+			// send ostream, variableMap, returnStack and iterator by reference
+		}
+
+	}
+	catch (logic_error &e) {
+
+		//cout << "caught 'logic' error" << endl;
+
+		int index = (*theIterator) -> ln -> line;
+  		stringstream ss;
+  		ss << index;
+ 		string str = ss.str();
+
+		out << "Error in Line " << str << ": " << e.what() << endl;
+	}
+	catch (end_call &e) {
+		return;
+	}
+	catch (divide_by_zero &e) {
+
+		int index = (*theIterator) -> ln -> line;
+  		stringstream ss;
+  		ss << index;
+ 		string str = ss.str();
+
+		out << "Error in Line " << str << ": " << e.what()<< endl;
+	}
+	catch(exception &e) {
+		out << "General Exception" << endl;
+	}
 }

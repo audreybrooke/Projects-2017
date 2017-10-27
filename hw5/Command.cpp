@@ -3,12 +3,19 @@
 #include <set>
 #include <stack>
 #include <vector>
+#include <string>
+#include <sstream>
 
 using namespace std;
 
 void moveToLine (vector<Line*> &prg, vector<Line*>::iterator &it, int goTo)
 {
-  // cout << "entering moveToLine" << endl;
+
+  // map.find(L);
+  // prg.find(goTo (not really this though))
+
+  vector<Line*>::iterator otherit = it;
+
   for (it = prg.begin(); it != prg.end(); it++)
   {
     Line* thisLine= *it;
@@ -22,6 +29,10 @@ void moveToLine (vector<Line*> &prg, vector<Line*>::iterator &it, int goTo)
 
   // line number not found!
   // THROW EXCEPTION!
+
+  it = otherit;
+
+  throw line_number_error("");
 }
 
 
@@ -62,9 +73,9 @@ void Print_Command::print (std::ostream & o) const
   _ae1->print (o);
 }
 
-void Print_Command::execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream)
+void Print_Command::execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream, set<string> &arrName, map<string, map<int, int> > &arrVarMap)
 {
-  (outStream) << (_ae1 -> getValue(varMap)) << endl;
+  outStream << (_ae1 -> getValue(varMap, arrVarMap, arrName)) << endl;
   theIt++;
 }
 
@@ -87,7 +98,7 @@ void LetConst_Command::print (std::ostream & o) const
   _ae1->print (o);
 }
 
-void LetConst_Command:: execute (vector<Line*> &program, map<string,int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream) 
+void LetConst_Command:: execute (vector<Line*> &program, map<string,int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream, set<string> &arrName, map<string, map<int, int> > &arrVarMap) 
 {
   // add/replace a variable to map with specific value
   // cout << "In LetConst execute" << endl;
@@ -96,7 +107,8 @@ void LetConst_Command:: execute (vector<Line*> &program, map<string,int> &varMap
 
   // map should have ints not expressions!
 
-  varMap[variable] = _ae1 -> getValue(varMap);
+
+  varMap[variable] = _ae1 -> getValue(varMap, arrVarMap, arrName);
   theIt++;
 }
 
@@ -123,9 +135,31 @@ void LetArray_Command::print (std::ostream & o) const
   _ae2->print (o);
 }
 
-void LetArray_Command::execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream) 
+void LetArray_Command::execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream, set<string> &arrName, map<string, map<int, int> > &arrVarMap) 
 {
+  int index = _ae1 -> getValue(varMap, arrVarMap, arrName);
+
+  arrVarMap[variable][index] = _ae2 -> getValue(varMap, arrVarMap, arrName);
+
+  /*
   // FILL IN when array plan is made
+  int index = _ae1 -> getValue(varMap, arrVarMap, arrName);
+  stringstream ss;
+  ss << index;
+  string str = ss.str();
+  string theKey = variable + "[" + str + "]";
+
+  // cout << "created variable: " << theKey << " with value: " << _ae2 -> getValue(varMap, arrVarMap, arrName) << endl;
+
+  arrVarMap[theKey] = _ae2 -> getValue(varMap, arrVarMap, arrName);
+
+  // cout << "Inserting " << variable << " to arrName set" << endl;
+
+  arrName.insert(variable);
+
+  // cout << "Is " << variable << " in the set? " << (arrName.count(variable) != 0) << endl;
+
+  */
   theIt++;
 }
 
@@ -149,11 +183,22 @@ void Goto_Command::print (std::ostream & o) const
   o << ">";
 }
 
-void Goto_Command::execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream)
+void Goto_Command::execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream, set<string> &arrName, map<string, map<int, int> > &arrVarMap)
 {
   // move iterator to the point that matches the given line
-  moveToLine(program, theIt, _num->line);
-  // cout << "returned from moveToLine" << endl;
+  try {
+    moveToLine(program, theIt, _num->line);
+    // cout << "returned from moveToLine" << endl;
+  }
+  catch (line_number_error &e) {
+
+    int index = _num -> line;
+    stringstream ss;
+    ss << index;
+    string str = ss.str();
+
+    throw logic_error("GOSUB to non-existent line " + str + ".");
+  }
 
 }
 
@@ -181,15 +226,28 @@ void IfThen_Command::print (std::ostream & o) const
   o << ">";
 }
 
-void IfThen_Command:: execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream)
+void IfThen_Command:: execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream, set<string> &arrName, map<string, map<int, int> > &arrVarMap)
 {
   // cout << "Entering If execute" << endl;
   // if the boolean expression results to true, move the iterator
-  if (_be1 -> getValue(varMap))
+  if (_be1 -> getValue(varMap, arrVarMap, arrName))
   {
     // cout << "about to call MoveToLine in IFTHEN" << endl;
-    moveToLine(program, theIt, _num->line);
-    // cout << "iterator moved" << endl;
+    try {
+      moveToLine(program, theIt, _num->line);
+    }
+    catch (line_number_error &e) {
+
+
+      int index = _num -> line;
+      stringstream ss;
+      ss << index;
+      string str = ss.str();
+
+      cout << "line number error in IF THEN" << endl;
+
+      throw logic_error ("IF jump to non-existent line " + str + ".");
+    }
   }
   else
   {
@@ -221,11 +279,22 @@ void Gosub_Command::print (std::ostream & o) const
   o << ">";
 }
 
-void Gosub_Command:: execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream)
+void Gosub_Command:: execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream, set<string> &arrName, map<string, map<int, int> > &arrVarMap)
 {
   // put the line you came from on return stack and go to indidcated line
   retStack.push(_num1);
-  moveToLine(program, theIt, _num2->line);
+  try {
+    moveToLine(program, theIt, _num2->line);
+  }
+  catch (line_number_error &e) {
+
+    int index = _num2 -> line;
+    stringstream ss;
+    ss << index;
+    string str = ss.str();
+
+   throw logic_error("GOSUB to non-existent line " + str + ".");
+  }
 }
 
 // Return_Command
@@ -245,10 +314,16 @@ Return_Command::~Return_Command()
 
 }
 
-void Return_Command:: execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream)
+void Return_Command:: execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream, set<string> &arrName, map<string, map<int, int> > &arrVarMap)
 {
   // go to the the line AFTER the most recent GOSUB line
   // find and remove the last gosub from the stack
+
+  if (retStack.empty())
+  {
+    throw logic_error ("No matching GOSUB for RETURN.");
+  }
+
   LineNumber* lastGoSub = retStack.top();
   retStack.pop();
   moveToLine(program, theIt, lastGoSub->line);
@@ -272,7 +347,7 @@ void End_Command::print (std::ostream & o) const
 	o << "END";
 }
 
-void End_Command::execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream)
+void End_Command::execute (vector<Line*> &program, map<string, int> &varMap, stack<LineNumber*> &retStack, vector<Line*>::iterator &theIt, std::ostream &outStream, set<string> &arrName, map<string, map<int, int> > &arrVarMap)
 {
   // terminate program
   theIt++;
@@ -283,5 +358,6 @@ void End_Command::execute (vector<Line*> &program, map<string, int> &varMap, sta
   else
   {
     // end in middle of program, throw exception?
+    throw end_call();
   }
 }

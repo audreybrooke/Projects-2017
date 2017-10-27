@@ -15,6 +15,7 @@ using namespace std;
 
 ArithmeticExpression* readAExpression (string ss);
 BooleanExpression* readBExpression (string ss);
+int endOfIndex (string theString);
 
 
 int main(int argc, char* argv[])
@@ -34,7 +35,7 @@ int main(int argc, char* argv[])
 
   if (input.fail())
   {
-    cerr << "Please provide a valid file." << endl;
+    cerr << "File " << argv[1] << " cannot be opened." << endl;
   }
 
   string curr; // the current line
@@ -95,7 +96,8 @@ int main(int argc, char* argv[])
         string exp1, exp2;
 
         // !!NOT PERFECT!! WHAT IF EXPRESSION HAS ] IN IT
-        int found = tString.find(']');
+        //int found = tString.find_last_of(']'); // needs to change
+        int found = endOfIndex (tString);
         exp1 = tString.substr(0, found); // index
         exp2 = tString.substr(found+1, tString.length()); //new value
         ArithmeticExpression* index = readAExpression(exp1);
@@ -205,6 +207,21 @@ int main(int argc, char* argv[])
 }
 
 
+
+
+int endOfIndex (string theString)
+{
+  int numOfOpen = 1;
+  int numOfClose = 0;
+  int i = 0;
+  while(numOfOpen > numOfClose)
+  {
+    if (theString[i] == '[') numOfOpen++;
+    else if (theString[i] == ']') numOfClose++;
+    i++;
+  }
+  return i-1;
+}
 
 
 
