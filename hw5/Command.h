@@ -7,6 +7,8 @@
 #include "BooleanExpression.h"
 #include "LineNumber.h"
 #include "Interpreter.h"
+#include <stdexcept>
+#include <exception>
 
 class Interpreter;
 class Line;
