@@ -10,17 +10,17 @@ Runtimes:
 
 	Jump to a line (IF THEN, GOSUB and GOTO):
 
-		I created a function in Command.cpp on lines 11-36 that takes in as parameters an int
-		line number, reference to a vector containing all the commands and their line number
-		Line) and a reference to the iterator of the vector that is being used to determine
-		the Line (and given command) being run. It runs in O(n) time because it iterates from the
-		first Line to last looking for the given LineNumber. If it never finds the line, then it
-		throws an error and has checked all n lines. The other lines in the execute
-		functions of IF, GOSUB and GOTO run in O(1) time.  (If the Lines were held in a map
-		instead of a stack, then they could be found in O(logn) time but a vector is a more
-		reasonalbe data structure because it is meant to keep the lines in order. Although the
-		STL C++ map would keep the Lines in order, this is not necessarily true for other types
-		of maps or languages.)
+		I created a function in Command.cpp on lines 11-36 that takes in as parameters an
+		int line number, reference to a vector containing all the commands and their line
+		number Line) and a reference to the iterator of the vector that is being used to
+		determine the Line (and given command) being run. It runs in O(n) time because it 
+		iterates from the first Line to last looking for the given LineNumber. If it never
+		finds the line, then it throws an error and has checked all n lines. The other lines
+		in the execute functions of IF, GOSUB and GOTO run in O(1) time.  (If the Lines were
+		held in a map instead of a stack, then they could be found in O(logn) time but a vector
+		is a more reasonalbe data structure because it is meant to keep the lines in order.
+		Although the STL C++ map would keep the Lines in order, this is not necessarily true for 
+		other types of maps or languages.)
 
 
 	Return:
