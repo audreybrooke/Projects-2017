@@ -16,7 +16,7 @@ bool NumStrComp::operator()(const std::string& lhs, const std::string& rhs)
 { 
 	int lhsValue = 0;
 	char current;
-	for (int i = 0; i < lhs.size(); i++)
+	for (int i = 0; i < (int)lhs.size(); i++)
 	{
 		current = lhs[i];
 		if (isdigit(current))
@@ -38,7 +38,7 @@ bool NumStrComp::operator()(const std::string& lhs, const std::string& rhs)
 
 	int rhsValue = 0;
 
-	for (int i = 0; i < rhs.size(); i++)
+	for (int i = 0; i < (int)rhs.size(); i++)
 	{
 		current = rhs[i];
 		if (isdigit(current))

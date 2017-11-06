@@ -1,0 +1,9 @@
+Answer to Homework 6 Question 2 Part c
+
+Runtime of mergesort as a function of k and n
+
+Runtime when k=n
+   When k=n there is an individual subgroup made for each
+   value of myArray, thus mSort immediately breaks the array
+   into ints individual parts, so merge has to sort all elements
+   at once by comparing them against eachother 
