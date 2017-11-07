@@ -84,8 +84,10 @@ template <class T, class Comparator>
   void mSort (vector<T>& myArray, int k, int l, int r, Comparator comp)
   {
 
+  	cout << "l = " << l << " r = " << r <<  " k = " << k << endl;
+
   	// cout << "entering mSort function" << endl;
-  	if (l < r && (r-l < k))
+  	if (l < r && (r-l+1 < k))
   	{
   		// cout << "r-l (elements to be sorted) is less than k" << endl;
   		// there are fewer elements than desired sections remaining
@@ -115,12 +117,14 @@ template <class T, class Comparator>
 
   		// determine the cut off points for each merge section
   		int prev = l-1;
-  		for (int i = 0; i < k; i++)
+  		for (int i = 0; i < k-1; i++)
   		{
   			arrOfIndices.push_back(min(r,prev+1));
-  			arrOfIndices.push_back(min(r, prev+1+((r-l)/k)));
-  			prev = prev+1+((r-l)/k);
+  			arrOfIndices.push_back(min(r, prev+((r-l+1)/k)));
+  			prev = prev+((r-l+1)/k);
   		}
+  		arrOfIndices.push_back(min(r, prev+1));
+  		arrOfIndices.push_back(r);
 
   		// call merge recursively on k subsets of this portion of the array
   		for (int i = 0; i < (int) arrOfIndices.size(); i+=2)
@@ -128,10 +132,10 @@ template <class T, class Comparator>
   			mSort(myArray, k, arrOfIndices[i], arrOfIndices[i+1], comp);
   		}
 
-  		// cout << "calling merge. arrOfIndices is:" << endl;
+  		cout << "calling merge. arrOfIndices is:" << endl;
   			for (int i = 0; i < (int)arrOfIndices.size(); ++i)
   			{
-  				// cout << arrOfIndices[i] << endl;
+  				cout << arrOfIndices[i] << endl;
   			}
   	 	
   	 	merge(myArray, k, l, r, arrOfIndices, comp);

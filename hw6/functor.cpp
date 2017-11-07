@@ -27,11 +27,11 @@ bool NumStrComp::operator()(const std::string& lhs, const std::string& rhs)
 		{
 			if (isupper(current))
 			{
-				lhsValue = current - 'A' + 10;
+				lhsValue += current - 'A' + 10;
 			}
 			else
 			{
-				lhsValue = current - 'a' + 10;
+				lhsValue += current - 'a' + 10;
 			}
 		}
 	}
@@ -49,11 +49,11 @@ bool NumStrComp::operator()(const std::string& lhs, const std::string& rhs)
 		{
 			if (isupper(current))
 			{
-				rhsValue = current - 'A' + 10;
+				rhsValue += current - 'A' + 10;
 			}
 			else
 			{
-				rhsValue = current - 'a' + 10;
+				rhsValue += current - 'a' + 10;
 			}
 		}
 	}
