@@ -9,7 +9,6 @@
 
 using namespace std;
 
-int count = 0;
 
 int main(int argc, char const *argv[])
 {
@@ -53,11 +52,13 @@ int main(int argc, char const *argv[])
 	}
 
 	bool availableClasses[25];
+	
+	/*
 	for (int i = 0; i < 25; ++i)
 	{
 		availableClasses[i] = true;
 	}
-
+	*/
 
 	// test input
 	 /*
@@ -73,7 +74,7 @@ int main(int argc, char const *argv[])
 	*/
 
 	double currentMaxLearning = 0;
-	findLearning(0, 0, currentMaxLearning, classOptions, maxWork, availableClasses);
+	findLearning(classOptions, 0, availableClasses, currentMaxLearning, maxWork, 0.0);
 
 	 
 
@@ -81,15 +82,20 @@ int main(int argc, char const *argv[])
 
 
 	// delete tClass pointers in the vector!
-	for (int i = 0; i < (int )classOptions.size(); ++i)
+	while ( (int)classOptions.size() > 0)
 	{
-		tClass* toDelete = classOptions[classOptions.size()-1];
+		tClass* toDelete = classOptions.back();
 		classOptions.pop_back();
 		delete toDelete;
 	}
 	return 0;
 }
 
+
+// NOT THE FUNCTION USED!!!!
+// this checks all permutations of classes instead of combinations
+// look below for combinations implementation (which is the one
+// used by main)
 void findLearning(double currTotalWork, double currTotalLearn, double& currMaxLearn,
 	vector<tClass*>& classOptions, double maxWork, bool availableClasses[25])
 {
@@ -125,6 +131,63 @@ void findLearning(double currTotalWork, double currTotalLearn, double& currMaxLe
 	if (currMaxLearn < currTotalLearn)
 		currMaxLearn = currTotalLearn;
 
+}
+
+
+// checks all combinations of classes! works much faster than permutations
+// this is utilized by main
+
+void findLearning(vector<tClass*>& classOptions, int location, bool availableClasses[25],
+	double& currentMaxLearning, double maxWork, double currWork)
+{
+
+	if (location == (int) classOptions.size()-1)
+	{
+		availableClasses[location] = false;
+		checkCombos(classOptions, availableClasses, currentMaxLearning, maxWork);
+		availableClasses[location] = true;
+		checkCombos(classOptions, availableClasses, currentMaxLearning, maxWork);
+		return;
+	}
+
+	if (currWork < maxWork)
+	{
+		availableClasses[location] = false;
+		findLearning(classOptions, location + 1, availableClasses, currentMaxLearning,
+			maxWork, currWork);
+	}
+	if (currWork+classOptions[location]->work < maxWork)
+	{
+		availableClasses[location] = true;
+		findLearning(classOptions, location + 1, availableClasses, currentMaxLearning,
+			maxWork, currWork+classOptions[location]->work);		
+	}
+
+
+}
+
+void checkCombos(vector<tClass*>& classOptions, bool availableClasses[25],
+	double& currentMaxLearning, double maxWork)
+{
+	// cout << "checking combo:";
+	double totalWork = 0;
+	double totalLearning = 0;
+	for (int i = 0; i < (int) classOptions.size(); ++i)
+	{
+		if (availableClasses[i])
+		{
+			totalWork+= classOptions[i]->work;
+			totalLearning+= classOptions[i]->learning;
+			// cout << classOptions[i]->name << " ";
+		}
+	}
+	// cout << endl;
+
+	if (totalWork <= maxWork && totalLearning > currentMaxLearning)
+	{
+		currentMaxLearning = totalLearning;
+		// cout << "New max learning: " << currentMaxLearning << endl;
+	}
 }
 
 

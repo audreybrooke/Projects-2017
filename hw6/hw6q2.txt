@@ -8,7 +8,8 @@ Runtime of mergesort as a function of k and n
    and finds the smallest element and puts it in the temp
    array -> (O(k * n)). The temp array is copied back into
    myArray -> O(n). Thus, merge takes O(k*n). So mSort's 
-   recurrance relation is T(n) = kT(n/k) + O(k*n).
+   recurrance relation is T(n) = kT(n/k) + O(k*n). Sum of
+   this recurrance is n * log base k of (n*k).
    
 
 Runtime when k=n
