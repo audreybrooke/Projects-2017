@@ -9,7 +9,8 @@ learning: learning.cpp
 functor.o: functor.cpp functor.h
 	g++ -g -Wall -c functor.cpp -o functor.o
 
-
+doublet:
+	g++ -g -Wall doublet.cpp -o doublet
 
 clean:
 	rm -f functor.o
