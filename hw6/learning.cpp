@@ -60,7 +60,7 @@ int main(int argc, char const *argv[])
 
 
 	// test input
-	 
+	 /*
 	 cout << "Total Options: " << numOptions << endl;
 	 cout << "Maximum Work: " << maxWork << endl;
 	 cout << "Classes:" << endl;
@@ -70,7 +70,7 @@ int main(int argc, char const *argv[])
 	 	cout << classOptions[i]->work;
 	 	cout << " learning: " << classOptions[i]->learning << endl;
 	 }
-	
+	*/
 
 	double currentMaxLearning = 0;
 	findLearning(0, 0, currentMaxLearning, classOptions, maxWork, availableClasses);
@@ -93,7 +93,7 @@ int main(int argc, char const *argv[])
 void findLearning(double currTotalWork, double currTotalLearn, double& currMaxLearn,
 	vector<tClass*>& classOptions, double maxWork, bool availableClasses[25])
 {
-	cout << ++count;
+	// cout << ++count;
 	for (int i = 0; i < (int) classOptions.size(); ++i)
 	{
 		double posLearnTotal = currTotalLearn + classOptions[i]->learning;

@@ -41,7 +41,7 @@ template <class T, class Comparator>
   		}
 
   		// put smallest element in temp array
-  		cout << "smallest index is " << smallestIndex << endl;
+  		// cout << "smallest index is " << smallestIndex << endl;
   		temp.push_back(myArray[indices[smallestIndex]]);
   		// cout << "* push back " << myArray[indices[smallestIndex]] <<
       //" successfull" << endl;
@@ -60,7 +60,7 @@ template <class T, class Comparator>
   			if (indices[s] <= indices[s+1])
   			{
   				smallestIndex = s;
-  				cout << "starter smallestIndex is " << s << endl;
+  				// cout << "starter smallestIndex is " << s << endl;
   				break;
   			}
   		}
@@ -69,14 +69,14 @@ template <class T, class Comparator>
 
   	// move sorted section into actual array
   	// // cout << "begining copying" << endl;
-  	cout << "temp is: ";
+  	/*cout << "temp is: ";
   	for (int i = 0; i < (int)temp.size(); ++i)
   	{
   		myArray[i+l] = temp[i];
   		cout << temp[i] <<", ";
   	}
   	cout << endl;
-
+    */
   	// // cout << "exiting merge" << endl << endl << endl << endl;
   	//// cout << myArray[0]<<myArray[1]<<endl;
 
@@ -88,7 +88,7 @@ template <class T, class Comparator>
   void mSort (vector<T>& myArray, int k, int l, int r, Comparator comp)
   {
 
-  	cout << "l = " << l << " r = " << r <<  " k = " << k << endl;
+  	// cout << "l = " << l << " r = " << r <<  " k = " << k << endl;
 
   	// cout << "entering mSort function" << endl;
   	if (l < r && (r-l+1 < k))
@@ -136,12 +136,12 @@ template <class T, class Comparator>
   			mSort(myArray, k, arrOfIndices[i], arrOfIndices[i+1], comp);
   		}
 
-  		cout << "calling merge. arrOfIndices is:" << endl;
+  		./*cout << "calling merge. arrOfIndices is:" << endl;
   			for (int i = 0; i < (int)arrOfIndices.size(); ++i)
   			{
   				cout << arrOfIndices[i] << endl;
   			}
-  	 	
+  	 	*/
   	 	merge(myArray, k, l, r, arrOfIndices, comp);
   	 }
   }
