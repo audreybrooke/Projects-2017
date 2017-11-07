@@ -69,14 +69,14 @@ template <class T, class Comparator>
 
   	// move sorted section into actual array
   	// // cout << "begining copying" << endl;
-  	/*cout << "temp is: ";
+  	// cout << "temp is: ";
   	for (int i = 0; i < (int)temp.size(); ++i)
   	{
   		myArray[i+l] = temp[i];
-  		cout << temp[i] <<", ";
+  		// cout << temp[i] <<", ";
   	}
-  	cout << endl;
-    */
+  	// cout << endl;
+    
   	// // cout << "exiting merge" << endl << endl << endl << endl;
   	//// cout << myArray[0]<<myArray[1]<<endl;
 
@@ -104,10 +104,10 @@ template <class T, class Comparator>
   		}
   		// mSort (myArray, r-l, l, r, comp);
   		// cout << "calling merge. arrOfIndices is:" << endl;
-  			for (int i = 0; i < (int)arrOfIndices.size(); ++i)
+  			/*for (int i = 0; i < (int)arrOfIndices.size(); ++i)
   			{
   				// cout << arrOfIndices[i] << endl;
-  			}
+  			}*/
   			// cout << "r-l+1 is " << r-l+1 << endl;
 
   		merge (myArray, r-l+1, l, r, arrOfIndices, comp);
@@ -136,7 +136,7 @@ template <class T, class Comparator>
   			mSort(myArray, k, arrOfIndices[i], arrOfIndices[i+1], comp);
   		}
 
-  		./*cout << "calling merge. arrOfIndices is:" << endl;
+  		/*cout << "calling merge. arrOfIndices is:" << endl;
   			for (int i = 0; i < (int)arrOfIndices.size(); ++i)
   			{
   				cout << arrOfIndices[i] << endl;
