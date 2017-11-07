@@ -9,7 +9,8 @@
 using namespace std;
  
 template <class T, class Comparator>
-  void merge (vector<T>& myArray, int k, int l, int r, vector<int> indices, Comparator comp)
+  void merge (vector<T>& myArray, int k, int l,
+    int r, vector<int> indices, Comparator comp)
   {
   	// cout << "entered merge " << indices.size()/2 << endl;
 

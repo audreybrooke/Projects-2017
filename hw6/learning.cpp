@@ -66,7 +66,8 @@ int main(int argc, char const *argv[])
 	 cout << "Classes:" << endl;
 	 for (int i = 0; i < (int)classOptions.size(); ++i)
 	 {
-	 	cout << "name: " << classOptions[i]->name << " work: " << classOptions[i]->work << " learning: " << classOptions[i]->learning << endl;
+	 	cout << "name: " << classOptions[i]->name << " work: ";
+	 	cout << classOptions[i]->work << " learning: " << classOptions[i]->learning << endl;
 	 }
 	
 
