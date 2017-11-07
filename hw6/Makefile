@@ -1,9 +1,9 @@
-all: hw6q3
+all: learning
 
 hw6q2: main.cpp functor.o
 	g++ -g -Wall functor.o main.cpp -o main
 
-hw6q3: learning.cpp
+learning: learning.cpp
 	g++ -g -Wall learning.cpp -o learning
 
 functor.o: functor.cpp functor.h
