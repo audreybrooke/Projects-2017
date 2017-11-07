@@ -27,12 +27,14 @@ template <class T, class Comparator>
   		for (int i = 0; i < (int) indices.size(); i+=2)
   		{
 
-  			// cout << ", comparing " << myArray[indices[i]] << " and " << myArray[indices[smallestIndex]] << endl;
+  			// cout << ", comparing " << myArray[indices[i]] << " and " <<
+        // myArray[indices[smallestIndex]] << endl;
 
   			if (indices[i] <= indices[i+1] &&
   				comp (myArray[indices[i]], myArray[indices[smallestIndex]]))
   			{
-  				// cout << "!! " << myArray[indices[i]] << " is less than " << myArray[indices[smallestIndex]] << endl;  				
+  				// cout << "!! " << myArray[indices[i]] << " is less than " <<
+          // myArray[indices[smallestIndex]] << endl;  				
   				smallestIndex = i;
   			}
   			// else if (indices[i] <= indices[i+1]) nsmv = i;
@@ -41,7 +43,8 @@ template <class T, class Comparator>
   		// put smallest element in temp array
   		cout << "smallest index is " << smallestIndex << endl;
   		temp.push_back(myArray[indices[smallestIndex]]);
-  		// cout << "* push back " << myArray[indices[smallestIndex]] << " successfull" << endl;
+  		// cout << "* push back " << myArray[indices[smallestIndex]] <<
+      //" successfull" << endl;
 
   		// increment this index to show that this value has been added
   		indices[smallestIndex]++;

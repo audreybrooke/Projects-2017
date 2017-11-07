@@ -67,7 +67,8 @@ int main(int argc, char const *argv[])
 	 for (int i = 0; i < (int)classOptions.size(); ++i)
 	 {
 	 	cout << "name: " << classOptions[i]->name << " work: ";
-	 	cout << classOptions[i]->work << " learning: " << classOptions[i]->learning << endl;
+	 	cout << classOptions[i]->work;
+	 	cout << " learning: " << classOptions[i]->learning << endl;
 	 }
 	
 
@@ -97,7 +98,8 @@ void findLearning(double currTotalWork, double currTotalLearn, double& currMaxLe
 	{
 		double posLearnTotal = currTotalLearn + classOptions[i]->learning;
 		double posWorkToal = currTotalWork + classOptions[i]->work;
-		// cout << "Position: " << i << ". learn total: " << posLearnTotal << " work total: " << posWorkToal << endl;
+		// cout << "Position: " << i << ". learn total: " << posLearnTotal
+		// << " work total: " << posWorkToal << endl;
 		// cout << "available classes:";
 		/*
 		for (int j = 0; j < (int) classOptions.size(); ++j)
@@ -114,7 +116,8 @@ void findLearning(double currTotalWork, double currTotalLearn, double& currMaxLe
 		{
 			// cout << "valid option" << endl;
 			availableClasses[i] = false;
-			findLearning(posWorkToal, posLearnTotal, currMaxLearn, classOptions, maxWork, availableClasses);
+			findLearning(posWorkToal, posLearnTotal, currMaxLearn, classOptions,
+				maxWork, availableClasses);
 			availableClasses[i] = true;
 		}
 
