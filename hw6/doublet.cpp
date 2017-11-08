@@ -1,4 +1,3 @@
-#include "doublet.h"
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
@@ -13,16 +12,32 @@
 
 using namespace std;
 
+typedef pair<int, string> isPair;
+
+
 void createAdjacencyList(map<string, vector<string> >& theGraph,
-	int dictionaryLength, ifstream& ifile);
+	int dictionaryLength, ifstream& ifile, string begin);
 
 bool findShortestPath(map<string, vector<string> >& theGraph, string start,
-	string end, map<string, int>& distances, map<string, string>& predecesors);
+	string end, map<string, int>& distances, map<string, string>& predecesors,
+	int& expansions);
 
-bool myComparison::operator() (const node& lhs, const node& rhs)
-	 {
-	 	return (lhs.priority < rhs.priority);
-	 }
+struct myComparison {
+	bool operator() (const isPair& lhs, const isPair& rhs);
+};
+
+bool myComparison::operator() (const isPair& lhs, const isPair& rhs)
+{
+	 	if (lhs.first != rhs.first)
+	 	{
+	 		return lhs.first > rhs.first;
+	 	}
+	 	else 
+	 	{
+	 		return lhs.second > rhs.second;
+	 	}
+	 	return false;
+}
 
 int main(int argc, char const *argv[])
 {
@@ -52,14 +67,14 @@ int main(int argc, char const *argv[])
 
 	// create adjacency list
 	// string keys lead to an array of adjeacent words
-	createAdjacencyList(theGraph, dictionaryLength, ifile);
+	createAdjacencyList(theGraph, dictionaryLength, ifile, beginWord);
 
-	bool foundPath;
 	map<string, int> distances;
 	map<string, string> predecesors;
 
 	// find the shortest path
-	foundPath = findShortestPath(theGraph, beginWord, endWord, distances, predecesors);
+	int expansions = 0;
+	bool didFindPath = findShortestPath(theGraph, beginWord, endWord, distances, predecesors, expansions);
 
 	// check if predecessors are correct
 	/*
@@ -81,65 +96,75 @@ int main(int argc, char const *argv[])
 	cout << beginWord << endl;
 	*/
 
+	// determine the list of transformations based on predecessors
 	vector<string> result;
-	int expansions = 0;
+	int path = 0;
 	string onWord = endWord;
-	while(onWord != beginWord &&foundPath)
+	while(onWord != beginWord &&didFindPath)
 	{
 		result.push_back(onWord);
 		onWord = predecesors[onWord];
-		expansions++;
+		path++;
 	}
 	result.push_back(beginWord);
 
+	// output the predecessors in reverse order (begining to end)
 	vector<string>::iterator it;
 	for (it = result.end(), it--; it != result.begin(); it--)
 	{
 		cout << (*it) << endl;
 	}
-	if (foundPath)
+	if (didFindPath)
 	{
 		cout << endWord << endl;
 	}
+	else
+	{
+		cout << "No transformation" << endl;		
+	}
 
-	
+	// overcounts the last word by one
+	expansions--;
+	cout << "expansions = " << expansions << endl;
 
-	 cout << "expansions = " << expansions << endl;
 
 	return 0;
 }
 
 void createAdjacencyList(map<string, vector<string> >& theGraph,
-	int dictionaryLength, ifstream& ifile)
+	int dictionaryLength, ifstream& ifile, string begin)
 {
 	string word;
 	for (int i = 0; i < dictionaryLength; ++i)
 	{
 		// add words to the graph
 		ifile >> word;
-		vector<string> nada;
-		theGraph.insert(std::pair<string, vector<string> > (word, nada));
-
-		// iterate through all combinations of the word with one letter changed
-		// check if those words are in the graph already
-		// if so, add word to their adjacency list
-		// also add the "misspelling" to word's adjacency list
-
-		// create all misspellings of word
-		string alphabet = "abcdefghijklmnopqrstuvwxyz";
-		string misspelling;
-
-		for (int i = 0; i < (int) word.size(); ++i)
-		{
-			// at each location of word
-			for (int j = 0; j < 26; ++j)
+		if (word.size() == begin.size())
 			{
-				misspelling = word.substr(0,i) + alphabet[j] + word.substr(i+1);
-				// cout << misspelling << endl;
-				if (misspelling != word && theGraph.count(misspelling) == 1)
+			vector<string> nada;
+			theGraph.insert(std::pair<string, vector<string> > (word, nada));
+
+			// iterate through all combinations of the word with one letter changed
+			// check if those words are in the graph already
+			// if so, add word to their adjacency list
+			// also add the "misspelling" to word's adjacency list
+
+			// create all misspellings of word
+			string alphabet = "abcdefghijklmnopqrstuvwxyz";
+			string misspelling;
+
+			for (int i = 0; i < (int) word.size(); ++i)
+			{
+				// at each location of word
+				for (int j = 0; j < 26; ++j)
 				{
-					theGraph[misspelling].push_back(word);
-					theGraph[word].push_back(misspelling);
+					misspelling = word.substr(0,i) + alphabet[j] + word.substr(i+1);
+					// cout << misspelling << endl;
+					if (misspelling != word && theGraph.count(misspelling) == 1)
+					{
+						theGraph[misspelling].push_back(word);
+						theGraph[word].push_back(misspelling);
+					}
 				}
 			}
 		}
@@ -167,7 +192,8 @@ void createAdjacencyList(map<string, vector<string> >& theGraph,
 
 
 bool findShortestPath(map<string, vector<string> >& theGraph, string start,
- string end, map<string, int>& distances, map<string, string>& predecesors)
+ string end, map<string, int>& distances, map<string, string>& predecesors,
+ int& expansions)
 {
 	// keep track of the number of expansions so far
 	// increment every time you remove the min value
@@ -181,7 +207,6 @@ bool findShortestPath(map<string, vector<string> >& theGraph, string start,
 	set <string> beenChecked;
 
 	// create priority queue of pairs
-	typedef pair<int, string> isPair;
 	priority_queue< isPair, vector <isPair>, greater<isPair> > pq;
 
 	// first value is distance, second is value (string)
@@ -194,6 +219,7 @@ bool findShortestPath(map<string, vector<string> >& theGraph, string start,
 	while (!pq.empty())
 	{
 		// remove smallest distance word from priority, u
+		expansions++;
 		string u = pq.top().second;
 		int uWeight = pq.top().first;
 		pq.pop();
@@ -226,7 +252,23 @@ bool findShortestPath(map<string, vector<string> >& theGraph, string start,
 				beenChecked.insert(v);
 				distances[v] = vWeight;
 				predecesors[v] = u;
-				pq.push(make_pair(vWeight, v));
+				// determine heuristic
+				int heuristic = 0;
+				// count differences between end word and v
+				for (int i = 0; i < (int) end.size(); ++i)
+				{
+					if (end[i] != v[i])
+					{
+						heuristic++;
+					}
+				}
+				int f = heuristic + vWeight;
+				int n = (int) v.size();
+				int prioWeight = (f * (n-1)) + heuristic;
+
+				pq.push(make_pair(prioWeight, v));
+
+				//expansions++;
 			}
 		}
 	}
