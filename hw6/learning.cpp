@@ -96,8 +96,9 @@ int main(int argc, char const *argv[])
 // this checks all permutations of classes instead of combinations
 // look below for combinations implementation (which is the one
 // used by main)
-void findLearning(double currTotalWork, double currTotalLearn, double& currMaxLearn,
-	vector<tClass*>& classOptions, double maxWork, bool availableClasses[25])
+void findLearning(double currTotalWork, double currTotalLearn,
+	double& currMaxLearn, vector<tClass*>& classOptions,
+	double maxWork, bool availableClasses[25])
 {
 	// cout << ++count;
 	for (int i = 0; i < (int) classOptions.size(); ++i)
@@ -137,8 +138,9 @@ void findLearning(double currTotalWork, double currTotalLearn, double& currMaxLe
 // checks all combinations of classes! works much faster than permutations
 // this is utilized by main
 
-void findLearning(vector<tClass*>& classOptions, int location, bool availableClasses[25],
-	double& currentMaxLearning, double maxWork, double currWork)
+void findLearning(vector<tClass*>& classOptions, int location,
+	bool availableClasses[25], double& currentMaxLearning,
+	double maxWork, double currWork)
 {
 
 	if (location == (int) classOptions.size()-1)

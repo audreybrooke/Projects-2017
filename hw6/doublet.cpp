@@ -16,8 +16,8 @@ using namespace std;
 void createAdjacencyList(map<string, vector<string> >& theGraph,
 	int dictionaryLength, ifstream& ifile);
 
-bool findShortestPath(map<string, vector<string> >& theGraph, string start, string end,
- map<string, int>& distances, map<string, string>& predecesors);
+bool findShortestPath(map<string, vector<string> >& theGraph, string start,
+	string end, map<string, int>& distances, map<string, string>& predecesors);
 
 bool myComparison::operator() (const node& lhs, const node& rhs)
 	 {
@@ -109,7 +109,8 @@ int main(int argc, char const *argv[])
 	return 0;
 }
 
-void createAdjacencyList(map<string, vector<string> >& theGraph, int dictionaryLength, ifstream& ifile)
+void createAdjacencyList(map<string, vector<string> >& theGraph,
+	int dictionaryLength, ifstream& ifile)
 {
 	string word;
 	for (int i = 0; i < dictionaryLength; ++i)
@@ -165,8 +166,8 @@ void createAdjacencyList(map<string, vector<string> >& theGraph, int dictionaryL
 }
 
 
-bool findShortestPath(map<string, vector<string> >& theGraph, string start, string end,
- map<string, int>& distances, map<string, string>& predecesors)
+bool findShortestPath(map<string, vector<string> >& theGraph, string start,
+ string end, map<string, int>& distances, map<string, string>& predecesors)
 {
 	// keep track of the number of expansions so far
 	// increment every time you remove the min value
