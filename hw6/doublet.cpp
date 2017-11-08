@@ -74,7 +74,8 @@ int main(int argc, char const *argv[])
 
 	// find the shortest path
 	int expansions = 0;
-	bool didFindPath = findShortestPath(theGraph, beginWord, endWord, distances, predecesors, expansions);
+	bool didFindPath = findShortestPath(theGraph, beginWord, endWord, distances,
+	 predecesors, expansions);
 
 	// check if predecessors are correct
 	/*
