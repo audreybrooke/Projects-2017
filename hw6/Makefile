@@ -1,4 +1,4 @@
-all: learning
+all: learning doublet
 
 hw6q2: main.cpp functor.o
 	g++ -g -Wall functor.o main.cpp -o main
@@ -16,3 +16,4 @@ clean:
 	rm -f functor.o
 	rm -f main
 	rm -f learning
+	rm -f doublet

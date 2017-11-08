@@ -75,7 +75,7 @@ int main(int argc, char const *argv[])
 
 	double currentMaxLearning = 0;
 	findLearning(classOptions, 0, availableClasses, currentMaxLearning, maxWork, 0.0);
-
+	//findLearning(0, 0, currentMaxLearning, classOptions, maxWork, availableClasses);
 	 
 
 	cout << "Maximum learning: " << currentMaxLearning << endl;

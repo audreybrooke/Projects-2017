@@ -1,4 +1,4 @@
-#include "functor.h"
+#include "doublet.h"
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
@@ -7,8 +7,22 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <queue>
+#include <utility>
+#include <set>
 
 using namespace std;
+
+void createAdjacencyList(map<string, vector<string> >& theGraph,
+	int dictionaryLength, ifstream& ifile);
+
+bool findShortestPath(map<string, vector<string> >& theGraph, string start, string end,
+ map<string, int>& distances, map<string, string>& predecesors);
+
+bool myComparison::operator() (const node& lhs, const node& rhs)
+	 {
+	 	return (lhs.priority < rhs.priority);
+	 }
 
 int main(int argc, char const *argv[])
 {
@@ -33,11 +47,71 @@ int main(int argc, char const *argv[])
 
 	ifile >> dictionaryLength;
 
-	// create adjacency list
-	// string keys lead to an array of adjeacent words
-	string word;
 	map<string, vector<string> > theGraph;
 
+
+	// create adjacency list
+	// string keys lead to an array of adjeacent words
+	createAdjacencyList(theGraph, dictionaryLength, ifile);
+
+	bool foundPath;
+	map<string, int> distances;
+	map<string, string> predecesors;
+
+	// find the shortest path
+	foundPath = findShortestPath(theGraph, beginWord, endWord, distances, predecesors);
+
+	// check if predecessors are correct
+	/*
+	map<string, string>::iterator it;
+	for (it = predecesors.begin(); it != predecesors.end(); it++)
+	{
+		cout << (*it).first << "'s predecesor is " << (*it).second << endl;
+	}
+	// output the result!
+	int expansions = 0;
+	string onWord = endWord;
+	while(onWord != beginWord)
+	{
+		cout << onWord << endl;
+		onWord = predecesors[onWord];
+		expansions++;
+	}
+
+	cout << beginWord << endl;
+	*/
+
+	vector<string> result;
+	int expansions = 0;
+	string onWord = endWord;
+	while(onWord != beginWord &&foundPath)
+	{
+		result.push_back(onWord);
+		onWord = predecesors[onWord];
+		expansions++;
+	}
+	result.push_back(beginWord);
+
+	vector<string>::iterator it;
+	for (it = result.end(), it--; it != result.begin(); it--)
+	{
+		cout << (*it) << endl;
+	}
+	if (foundPath)
+	{
+		cout << endWord << endl;
+	}
+
+	
+
+	 cout << "expansions = " << expansions << endl;
+
+	return 0;
+}
+
+void createAdjacencyList(map<string, vector<string> >& theGraph, int dictionaryLength, ifstream& ifile)
+{
+	string word;
 	for (int i = 0; i < dictionaryLength; ++i)
 	{
 		// add words to the graph
@@ -71,7 +145,8 @@ int main(int argc, char const *argv[])
 	}
 
 	// test the graph
-	cout << "Adjacency List for " << argv[3] << endl << endl;
+	/*
+	cout << "Adjacency List" << endl;
 
 	map<string, vector<string> >::iterator it;
 	for ( it = theGraph.begin(); it != theGraph.end(); ++it)
@@ -85,7 +160,75 @@ int main(int argc, char const *argv[])
 		cout << endl;
 	}
 
+	cout << endl;
+	*/
+}
 
 
-	return 0;
+bool findShortestPath(map<string, vector<string> >& theGraph, string start, string end,
+ map<string, int>& distances, map<string, string>& predecesors)
+{
+	// keep track of the number of expansions so far
+	// increment every time you remove the min value
+	// from the min heap (priority queue?)
+	// The starting word should increment the number
+	// of expansions (from 0 to 1), but the ending
+	// word should not.
+	// int expansions = 0;
+
+	// distances are all infinite?
+	set <string> beenChecked;
+
+	// create priority queue of pairs
+	typedef pair<int, string> isPair;
+	priority_queue< isPair, vector <isPair>, greater<isPair> > pq;
+
+	// first value is distance, second is value (string)
+	// place starting word in the queue (distance = 0)
+	pq.push(make_pair(0, start));
+	distances[start] = 0;
+	beenChecked.insert(start);
+
+	// itterate through priority queue until it is empty
+	while (!pq.empty())
+	{
+		// remove smallest distance word from priority, u
+		string u = pq.top().second;
+		int uWeight = pq.top().first;
+		pq.pop();
+		// cout << "removed " << u << " from priority queue" << endl;
+
+		// check if you have found the end word
+		if (u == end)
+		{
+			// cout << "found end word" << endl;
+			return true;
+		}
+
+		// look though all words adjacent to u
+		vector<string> uAdjacent = theGraph[u];
+		vector<string>::iterator it;
+
+		for (it = uAdjacent.begin(); it != uAdjacent.end(); it++)
+		{
+			// each adjacent word is "v"			
+			string v = (*it);
+			int vWeight = uWeight + 1;
+		
+			// if u provides a shorter path to v than
+			// recorded path, or v has not been discovered
+			// aka infinite distance
+			if (beenChecked.count(v) == 0 || distances[v] > vWeight)
+			{
+				// update the distance of v
+				// insert v into priority queue (will update value)
+				beenChecked.insert(v);
+				distances[v] = vWeight;
+				predecesors[v] = u;
+				pq.push(make_pair(vWeight, v));
+			}
+		}
+	}
+
+	return false;
 }
