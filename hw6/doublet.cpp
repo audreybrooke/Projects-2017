@@ -9,10 +9,9 @@
 #include <queue>
 #include <utility>
 #include <set>
+#include <locale>
 
 using namespace std;
-
-typedef pair<int, string> isPair;
 
 
 void createAdjacencyList(map<string, vector<string> >& theGraph,
@@ -23,10 +22,10 @@ bool findShortestPath(map<string, vector<string> >& theGraph, string start,
 	int& expansions);
 
 struct myComparison {
-	bool operator() (const isPair& lhs, const isPair& rhs);
+	bool operator() (const pair<int, string>& lhs, const pair<int, string>& rhs);
 };
 
-bool myComparison::operator() (const isPair& lhs, const isPair& rhs)
+bool myComparison::operator() (const pair<int, string>& lhs, const pair<int, string>& rhs)
 {
 	 	if (lhs.first != rhs.first)
 	 	{
@@ -140,6 +139,11 @@ void createAdjacencyList(map<string, vector<string> >& theGraph,
 	{
 		// add words to the graph
 		ifile >> word;
+		locale loc;
+		for (int i = 0; i < (int) word.size(); ++i)
+		{
+			tolower(word[i], loc);
+		}
 		if (word.size() == begin.size())
 			{
 			vector<string> nada;
@@ -208,7 +212,10 @@ bool findShortestPath(map<string, vector<string> >& theGraph, string start,
 	set <string> beenChecked;
 
 	// create priority queue of pairs
-	priority_queue< isPair, vector <isPair>, greater<isPair> > pq;
+	// myComparison comp; // greater<pair<int, string> >
+	// greater is a stl comparator
+	priority_queue< pair<int, string> , vector <pair<int, string> >,
+	 greater<pair<int, string> > > pq;
 
 	// first value is distance, second is value (string)
 	// place starting word in the queue (distance = 0)
@@ -271,6 +278,7 @@ bool findShortestPath(map<string, vector<string> >& theGraph, string start,
 
 				//expansions++;
 			}
+			// beenChecked.insert(v);
 		}
 	}
 
