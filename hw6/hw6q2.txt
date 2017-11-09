@@ -8,8 +8,12 @@ Runtime of mergesort as a function of k and n
    and finds the smallest element and puts it in the temp
    array -> (O(k * n)). The temp array is copied back into
    myArray -> O(n). Thus, merge takes O(k*n). So mSort's 
-   recurrance relation is T(n) = kT(n/k) + O(k*n). Sum of
-   this recurrance is n * log base k of (n*k).
+   recurrance relation is T(n) = kT(n/k) + O(k*n). So, the 
+   recurrsive tree is log base k depth because the amount of
+   elements to be sorted is divided by k each time. There
+   are n total elements at each depth of the tree and the single
+   call to merge takes O(n*k). Sum of this recurrance is
+   n * log base k of (n*k).
    
 
 Runtime when k=n
