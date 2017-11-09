@@ -187,7 +187,7 @@ void createAdjacencyList(map<string, vector<string> >& theGraph,
 	}
 
 	// test the graph
-	
+	/*
 	cout << "Adjacency List" << endl;
 
 	map<string, vector<string> >::iterator it;
@@ -203,6 +203,8 @@ void createAdjacencyList(map<string, vector<string> >& theGraph,
 	}
 
 	cout << endl;
+	*/
+
 	
 }
 
