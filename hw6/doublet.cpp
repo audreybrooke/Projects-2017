@@ -25,7 +25,8 @@ struct myComparison {
 	bool operator() (const pair<int, string>& lhs, const pair<int, string>& rhs);
 };
 
-bool myComparison::operator() (const pair<int, string>& lhs, const pair<int, string>& rhs)
+bool myComparison::operator() (const pair<int, string>& lhs,
+ const pair<int, string>& rhs)
 {
 	 	if (lhs.first != rhs.first)
 	 	{
@@ -36,6 +37,16 @@ bool myComparison::operator() (const pair<int, string>& lhs, const pair<int, str
 	 		return lhs.second > rhs.second;
 	 	}
 	 	return false;
+}
+
+string makeLower(string word)
+{
+	locale loc;
+	for (int i = 0; i < (int) word.size(); ++i)
+	{
+		word[i] = tolower(word[i], loc);
+	}
+	return word;
 }
 
 int main(int argc, char const *argv[])
@@ -55,7 +66,9 @@ int main(int argc, char const *argv[])
 	}
 
 	string beginWord = argv[1];
+	beginWord = makeLower(beginWord);
 	string endWord = argv[2];
+	endWord = makeLower(endWord);
 
 	int dictionaryLength;
 
@@ -131,6 +144,7 @@ int main(int argc, char const *argv[])
 	return 0;
 }
 
+
 void createAdjacencyList(map<string, vector<string> >& theGraph,
 	int dictionaryLength, ifstream& ifile, string begin)
 {
@@ -139,11 +153,8 @@ void createAdjacencyList(map<string, vector<string> >& theGraph,
 	{
 		// add words to the graph
 		ifile >> word;
-		locale loc;
-		for (int i = 0; i < (int) word.size(); ++i)
-		{
-			tolower(word[i], loc);
-		}
+		word = makeLower(word);
+
 		if (word.size() == begin.size())
 			{
 			vector<string> nada;
@@ -176,7 +187,7 @@ void createAdjacencyList(map<string, vector<string> >& theGraph,
 	}
 
 	// test the graph
-	/*
+	
 	cout << "Adjacency List" << endl;
 
 	map<string, vector<string> >::iterator it;
@@ -192,7 +203,7 @@ void createAdjacencyList(map<string, vector<string> >& theGraph,
 	}
 
 	cout << endl;
-	*/
+	
 }
 
 
