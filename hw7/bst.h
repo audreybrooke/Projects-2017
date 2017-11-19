@@ -368,12 +368,16 @@ template<typename Key, typename Value>
 BinarySearchTree<Key, Value>::BinarySearchTree()
 {
 	// TODO
+	mRoot = NULL;
 }
 
 template<typename Key, typename Value>
 BinarySearchTree<Key, Value>::~BinarySearchTree()
 {
 	// TODO
+	// could be wrong
+	clear();
+	delete mRoot;
 }
 
 template<typename Key, typename Value>
@@ -423,6 +427,72 @@ template<typename Key, typename Value>
 void BinarySearchTree<Key, Value>::insert(const std::pair<Key, Value>& keyValuePair)
 {
 	// TODO
+	Key toFind = keyValuePair.first;
+	Node<Key, Value>* location = mRoot;
+
+
+	if (mRoot == NULL)
+	{
+	 	mRoot = new Node<Key, Value> (keyValuePair.first, keyValuePair.second, NULL);
+		return;
+	}
+
+	bool found = false;
+
+	while (!found && location != NULL)
+	{
+		if (location->getKey() == toFind)
+		{
+			// this key already exists, update the value!
+			location->setValue(keyValuePair.second);
+			found = true;
+		}
+		else if (toFind < location->getKey())
+		{
+			// key is less than current location
+
+			if (location->getLeft() != NULL)
+			{
+				// there is a child here, move to its location to continue search
+				
+				location = location->getLeft();
+			}
+			else
+			{
+				// no child here. create a new node and place it here
+
+				found = true;
+				if (location != NULL)
+				{
+					Node<Key, Value>* toInsert = new Node<Key, Value> (keyValuePair.first, keyValuePair.second, location);
+					location->setLeft(toInsert);
+				}
+				
+			}
+		}
+		else
+		{
+			// key is greater than current location
+
+			if (location->getRight() != NULL)
+			{
+				// there is a child here, move to its location to continue search
+				
+				location = location->getRight();
+			}
+			else
+			{
+				// no child here. create a new node and place it here
+
+				found = true;
+				std::cout << "making toInsert" << std::endl;
+				Node<Key, Value>* toInsert = new Node<Key, Value> (keyValuePair.first, keyValuePair.second, location);
+				std::cout << "trying to set " << toInsert->getValue() << " as the child of " << location->getValue() << std::endl;
+				location->setRight(toInsert);
+			}
+		}
+	}
+
 }
 
 /**
@@ -433,6 +503,48 @@ template<typename Key, typename Value>
 void BinarySearchTree<Key, Value>::clear()
 {
 	// TODO
+	
+	Node<Key, Value>* smallest = getSmallestNode();
+	Node<Key, Value>* toDelete;
+
+	while(smallest != NULL)
+	{
+
+		if (smallest->getParent() != NULL)
+		{
+			if (smallest->getRight() == NULL)
+			{
+				smallest->getParent()->setLeft(NULL);
+			}
+			else
+			{
+				smallest->getRight()->setParent(smallest->getParent());
+				(smallest->getParent())->setLeft(smallest->getRight());
+
+			}
+		}
+		else
+		{
+			if (smallest->getRight() == NULL)
+			{
+				mRoot = NULL;
+			}
+			else
+			{			
+				mRoot = smallest->getRight();
+				smallest->getRight()->setParent(NULL);
+			}
+		}
+
+		toDelete = smallest;
+		delete toDelete;
+
+		smallest = getSmallestNode();
+
+	}
+
+	mRoot = NULL;
+	
 }
 
 /**
@@ -442,6 +554,23 @@ template<typename Key, typename Value>
 Node<Key, Value>* BinarySearchTree<Key, Value>::getSmallestNode() const
 {
 	// TODO
+
+	Node<Key, Value>* location = mRoot;
+
+	while (location != NULL)
+	{
+
+		if (location->getLeft() == NULL)
+		{
+			return location;
+		}
+
+		location = location->getLeft();
+
+	}
+
+	return NULL;
+
 }
 
 /**
@@ -453,6 +582,57 @@ template<typename Key, typename Value>
 Node<Key, Value>* BinarySearchTree<Key, Value>::internalFind(const Key& key) const
 {
 	// TODO
+
+	Key toFind = key;
+	Node<Key, Value>* location = mRoot;
+	bool found = false;
+	while (!found && location != NULL)
+	{
+		if (location->getKey() == toFind)
+		{
+			// this key already exists, update the value!
+			found = true;
+			return location;
+		}
+		else if (toFind < location->getKey())
+		{
+			// key is less than current location
+
+			if (location->getLeft() != NULL)
+			{
+				// there is a child here, move to its location to continue search
+				
+				location = location->getLeft();
+			}
+			else
+			{
+				// no child here. this key does not exist. return NULL.
+
+				found = true;
+				return NULL;
+			}
+		}
+		else
+		{
+			// key is greater than current location
+
+			if (location->getRight() != NULL)
+			{
+				// there is a child here, move to its location to continue search
+				
+				location = location->getRight();
+			}
+			else
+			{
+				// no child here. this key does not exist. return NULL
+
+				found = true;
+				return NULL;
+			}
+		}
+	}
+
+	return NULL;
 }
 
 /**
