@@ -101,7 +101,8 @@ AVLNode<Key, Value>* AVLNode<Key, Value>::getLeft() const
 }
 
 /**
-* Getter function for the right child. Used since the node inherits from a base node.
+* Getter function for the right child. Used since the node inherits from a base
+* node.
 */
 template<typename Key, typename Value>
 AVLNode<Key, Value>* AVLNode<Key, Value>::getRight() const
