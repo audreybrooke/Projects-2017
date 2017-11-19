@@ -63,7 +63,8 @@ Node<Key, Value>::Node(const Key& key, const Value& value, Node<Key, Value>* par
 
 /**
 * Destructor, which does not need to do anything since the pointers inside of a node
-* are only used as references to existing nodes. The nodes pointed to by parent/left/right
+* are only used as references to existing nodes. The nodes pointed to by
+* parent/left/right
 * are freed within the destructor in the BinarySearchTree.
 */
 template<typename Key, typename Value>
@@ -299,7 +300,8 @@ std::pair<Key, Value>* BinarySearchTree<Key, Value>::iterator::operator->()
 * as 'rhs'
 */
 template<typename Key, typename Value>
-bool BinarySearchTree<Key, Value>::iterator::operator==(const BinarySearchTree<Key, Value>::iterator& rhs) const
+bool BinarySearchTree<Key, Value>::iterator::operator==(const BinarySearchTree<Key,
+ Value>::iterator& rhs) const
 {
 	return this->mCurrent == rhs.mCurrent;
 }
@@ -309,7 +311,8 @@ bool BinarySearchTree<Key, Value>::iterator::operator==(const BinarySearchTree<K
 * as 'rhs'
 */
 template<typename Key, typename Value>
-bool BinarySearchTree<Key, Value>::iterator::operator!=(const BinarySearchTree<Key, Value>::iterator& rhs) const
+bool BinarySearchTree<Key, Value>::iterator::operator!=(const BinarySearchTree<Key,
+	Value>::iterator& rhs) const
 {
 	return this->mCurrent != rhs.mCurrent;
 }
@@ -318,7 +321,8 @@ bool BinarySearchTree<Key, Value>::iterator::operator!=(const BinarySearchTree<K
 * Sets one iterator equal to another iterator.
 */
 template<typename Key, typename Value>
-typename BinarySearchTree<Key, Value>::iterator &BinarySearchTree<Key, Value>::iterator::operator=(const BinarySearchTree<Key, Value>::iterator& rhs)
+typename BinarySearchTree<Key, Value>::iterator &BinarySearchTree<Key,
+ Value>::iterator::operator=(const BinarySearchTree<Key, Value>::iterator& rhs)
 {
 	this->mCurrent = rhs.mCurrent;
 	return *this;
@@ -328,7 +332,8 @@ typename BinarySearchTree<Key, Value>::iterator &BinarySearchTree<Key, Value>::i
 * Advances the iterator's location using an in-order traversal.
 */
 template<typename Key, typename Value>
-typename BinarySearchTree<Key, Value>::iterator& BinarySearchTree<Key, Value>::iterator::operator++()
+typename BinarySearchTree<Key, Value>::iterator& BinarySearchTree<Key,
+ Value>::iterator::operator++()
 {
 	if(mCurrent->getRight() != NULL)
 	{
@@ -393,7 +398,8 @@ void BinarySearchTree<Key, Value>::print() const
 * Returns an iterator to the "smallest" item in the tree
 */
 template<typename Key, typename Value>
-typename BinarySearchTree<Key, Value>::iterator BinarySearchTree<Key, Value>::begin() const
+typename BinarySearchTree<Key, Value>::iterator BinarySearchTree<Key, Value>
+::begin() const
 {
 	BinarySearchTree<Key, Value>::iterator begin(getSmallestNode());
 	return begin;
@@ -403,7 +409,8 @@ typename BinarySearchTree<Key, Value>::iterator BinarySearchTree<Key, Value>::be
 * Returns an iterator whose value means INVALID
 */
 template<typename Key, typename Value>
-typename BinarySearchTree<Key, Value>::iterator BinarySearchTree<Key, Value>::end() const
+typename BinarySearchTree<Key, Value>::iterator BinarySearchTree<Key, Value>
+::end() const
 {
 	BinarySearchTree<Key, Value>::iterator end(NULL);
 	return end;
@@ -414,7 +421,8 @@ typename BinarySearchTree<Key, Value>::iterator BinarySearchTree<Key, Value>::en
 * or the end iterator if k does not exist in the tree
 */
 template<typename Key, typename Value>
-typename BinarySearchTree<Key, Value>::iterator BinarySearchTree<Key, Value>::find(const Key& key) const
+typename BinarySearchTree<Key, Value>::iterator BinarySearchTree<Key, Value>
+::find(const Key& key) const
 {
 	Node<Key, Value>* curr = internalFind(key);
 	BinarySearchTree<Key, Value>::iterator it(curr);
@@ -422,7 +430,8 @@ typename BinarySearchTree<Key, Value>::iterator BinarySearchTree<Key, Value>::fi
 }
 
 /**
-* An insert method to insert into a Binary Search Tree. The tree will not remain balanced when
+* An insert method to insert into a Binary Search Tree. The tree will not remain
+* balanced when
 * inserting.
 */
 template<typename Key, typename Value>
@@ -435,7 +444,8 @@ void BinarySearchTree<Key, Value>::insert(const std::pair<Key, Value>& keyValueP
 
 	if (mRoot == NULL)
 	{
-	 	mRoot = new Node<Key, Value> (keyValuePair.first, keyValuePair.second, NULL);
+	 	mRoot = new Node<Key, Value> (keyValuePair.first, keyValuePair.second,
+	 	 NULL);
 		return;
 	}
 
@@ -466,7 +476,8 @@ void BinarySearchTree<Key, Value>::insert(const std::pair<Key, Value>& keyValueP
 				found = true;
 				if (location != NULL)
 				{
-					Node<Key, Value>* toInsert = new Node<Key, Value> (keyValuePair.first, keyValuePair.second, location);
+					Node<Key, Value>* toInsert = new Node<Key, Value>
+					 (keyValuePair.first, keyValuePair.second, location);
 					location->setLeft(toInsert);
 				}
 				
@@ -487,9 +498,8 @@ void BinarySearchTree<Key, Value>::insert(const std::pair<Key, Value>& keyValueP
 				// no child here. create a new node and place it here
 
 				found = true;
-				std::cout << "making toInsert" << std::endl;
-				Node<Key, Value>* toInsert = new Node<Key, Value> (keyValuePair.first, keyValuePair.second, location);
-				std::cout << "trying to set " << toInsert->getValue() << " as the child of " << location->getValue() << std::endl;
+				Node<Key, Value>* toInsert = new Node<Key, Value>
+				 (keyValuePair.first, keyValuePair.second, location);
 				location->setRight(toInsert);
 			}
 		}

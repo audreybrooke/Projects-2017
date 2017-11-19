@@ -47,7 +47,8 @@ Begin implementations for the AVLNode class.
 * Constructor for an AVLNode. Nodes are initialized with a height of 0.
 */
 template<typename Key, typename Value>
-AVLNode<Key, Value>::AVLNode(const Key& key, const Value& value, AVLNode<Key, Value>* parent)
+AVLNode<Key, Value>::AVLNode(const Key& key, const Value& value, AVLNode<Key, 
+	Value>* parent)
 	: Node<Key, Value>(key, value, parent)
 	, mHeight(0)
 {
@@ -130,10 +131,14 @@ private:
 	/* Helper functions are strongly encouraged to help separate the problem
 	   into smaller pieces. You should not need additional data members. */
 	
-	void zigzigLeft(AVLNode<Key,Value>* x, AVLNode<Key,Value>* y, AVLNode<Key,Value>* z);
-	void zigzagLeft(AVLNode<Key,Value>* x, AVLNode<Key,Value>* y, AVLNode<Key,Value>* z);
-	void zigzigRight(AVLNode<Key,Value>* x, AVLNode<Key,Value>* y, AVLNode<Key,Value>* z);
-	void zigzagRight(AVLNode<Key,Value>* x, AVLNode<Key,Value>* y, AVLNode<Key,Value>* z);
+	void zigzigLeft(AVLNode<Key,Value>* x, AVLNode<Key,Value>* y, 
+		AVLNode<Key,Value>* z);
+	void zigzagLeft(AVLNode<Key,Value>* x, AVLNode<Key,Value>* y, 
+		AVLNode<Key,Value>* z);
+	void zigzigRight(AVLNode<Key,Value>* x, AVLNode<Key,Value>* y, 
+		AVLNode<Key,Value>* z);
+	void zigzagRight(AVLNode<Key,Value>* x, AVLNode<Key,Value>* y, 
+		AVLNode<Key,Value>* z);
 	AVLNode<Key, Value>* findInvalidHeight(AVLNode<Key, Value>* begin);
 	AVLNode<Key, Value>* removeHelper(const Key& key);
 	void updateHeight(AVLNode<Key, Value>* newNode);
@@ -150,7 +155,8 @@ Begin implementations for the AVLTree class.
 */
 
 /**
-* Insert function for a key value pair. Finds location to insert the node and then balances the tree. 
+* Insert function for a key value pair. Finds location to insert the node and then
+* balances the tree. 
 */
 template<typename Key, typename Value>
 void AVLTree<Key, Value>::insert(const std::pair<Key, Value>& keyValuePair)
@@ -178,8 +184,6 @@ void AVLTree<Key, Value>::insert(const std::pair<Key, Value>& keyValuePair)
 		// and fix it
 		if (problemNode != NULL)
 		{
-			// std::cout << "problem node is " << problemNode->getValue() << std::endl;
-
 			fixProblem(problemNode);
 		}
 	}
@@ -188,7 +192,8 @@ void AVLTree<Key, Value>::insert(const std::pair<Key, Value>& keyValuePair)
 }
 
 /**
-* Remove function for a given key. Finds the node, reattaches pointers, and then balances when finished. 
+* Remove function for a given key. Finds the node, reattaches pointers, and then
+* balances when finished. 
 */
 template<typename Key, typename Value>
 void AVLTree<Key, Value>::remove(const Key& key)
@@ -203,11 +208,9 @@ void AVLTree<Key, Value>::remove(const Key& key)
 	if (checkHere == NULL)
 	{
 		problemNode = NULL;
-		std::cout << "No node to check" << std::endl;
 	}
 	else
 	{
-		std::cout << "checking node " << checkHere->getValue() << checkHere->getKey() << std::endl;
 		problemNode = findInvalidHeight(checkHere);
 	}
 
@@ -219,7 +222,6 @@ void AVLTree<Key, Value>::remove(const Key& key)
 	while (problemNode != NULL)
 	{
 		// determine if it is a zigzig or a zig zag and fix
-		std::cout << "problem node is " << problemNode->getValue() << problemNode->getKey() << std::endl;
 		checkHere = fixProblem(problemNode);
 
 
@@ -236,7 +238,8 @@ void AVLTree<Key, Value>::remove(const Key& key)
 template<typename Key, typename Value>
 AVLNode<Key, Value>* AVLTree<Key, Value>::removeHelper(const Key& key)
 {
-	AVLNode<Key, Value>* toDelete = static_cast<AVLNode<Key,Value>*>(this->internalFind(key));
+	AVLNode<Key, Value>* toDelete = static_cast<AVLNode<Key,Value>*>
+	(this->internalFind(key));
 
 	if (toDelete == NULL)
 	{
@@ -433,17 +436,20 @@ AVLNode<Key, Value>* AVLTree<Key, Value>::removeHelper(const Key& key)
 * returns the new "local root"
 */
 template<typename Key, typename Value>
-AVLNode<Key, Value>* AVLTree<Key, Value>::fixProblem(AVLNode<Key, Value>* problemNode)
+AVLNode<Key, Value>* AVLTree<Key, Value>::fixProblem(AVLNode<Key, Value>* 
+	problemNode)
 {
 	if (problemNode == NULL)
 	{
 		return NULL;
 	}
 
-	// std::cout << "entering fixproblem. problem node is " << problemNode->getValue() << " height is" << problemNode->getHeight() << std::endl;
+	// std::cout << "entering fixproblem. problem node is " << 
+	// problemNode->getValue() << " height is" << problemNode->getHeight() << std::endl;
 	if (problemNode->getRight() != NULL)
 	{
-		// std::cout << "right height = " << problemNode->getRight()->getHeight() << std::endl;
+		// std::cout << "right height = " << problemNode->getRight()->getHeight()
+		// << std::endl;
 	}
 	else
 	{
@@ -451,7 +457,8 @@ AVLNode<Key, Value>* AVLTree<Key, Value>::fixProblem(AVLNode<Key, Value>* proble
 	}
 	if (problemNode->getLeft() != NULL)
 	{
-		// std::cout << "left height = " << problemNode->getLeft()->getHeight() << std::endl;
+		// std::cout << "left height = " << problemNode->getLeft()->getHeight()
+		// << std::endl;
 	}
 	else
 	{
@@ -462,13 +469,15 @@ AVLNode<Key, Value>* AVLTree<Key, Value>::fixProblem(AVLNode<Key, Value>* proble
 	AVLNode<Key, Value>* x = NULL;
 	// std::cout << "entering if" << std::endl;
 
-	if (problemNode->getRight() != NULL && (problemNode->getLeft() == NULL || problemNode->getRight()->getHeight() > problemNode->getLeft()->getHeight()))
+	if (problemNode->getRight() != NULL && (problemNode->getLeft() == NULL || 
+		problemNode->getRight()->getHeight() > problemNode->getLeft()->getHeight()))
 	{
 		// too heavy on right side
 		// std::cout << "right side too heavy" << std::endl;
 		y = problemNode->getRight();
 
-		if (y->getRight() == NULL || (y->getLeft() != NULL && y->getLeft()->getHeight() > y->getRight()->getHeight()))
+		if (y->getRight() == NULL || (y->getLeft() != NULL && 
+			y->getLeft()->getHeight() > y->getRight()->getHeight()))
 		{
 			// zig-zag
 			// std::cout << "right left" << std::endl;
@@ -491,7 +500,8 @@ AVLNode<Key, Value>* AVLTree<Key, Value>::fixProblem(AVLNode<Key, Value>* proble
 		y = problemNode->getLeft();
 		// std::cout << "left-?. y = " << y->getValue() << std::endl;
 
-		if (y->getLeft() == NULL || (y->getRight() != NULL && y->getRight()->getHeight() > y->getLeft()->getHeight()))
+		if (y->getLeft() == NULL || (y->getRight() != NULL && 
+			y->getRight()->getHeight() > y->getLeft()->getHeight()))
 		{
 			// zig-zag
 			// std::cout << "left right" << std::endl;
@@ -525,7 +535,9 @@ void AVLTree<Key,Value>::updateHeight(AVLNode<Key, Value>* newNode)
 		return;
 	}
 
-	// std::cout <<"in update height. checking " << newNode->getKey() << newNode->getValue() << ".  height = " << newNode->getHeight() << std::endl;
+	// std::cout <<"in update height. checking " << newNode->getKey()
+	// << newNode->getValue() << ".  height = " << newNode->getHeight()
+	// << std::endl;
 	if (newNode->getLeft() == NULL && newNode->getRight() == NULL)
 	{
 		// newNode->setHeight(0);
@@ -551,19 +563,23 @@ void AVLTree<Key,Value>::updateHeight(AVLNode<Key, Value>* newNode)
 		}
 		newNode->setHeight(maxH + 1);
 	}
-	// std::cout << "new hieght for " << newNode->getValue() << " height = " << newNode->getHeight() << std::endl;
+	// std::cout << "new hieght for " << newNode->getValue() << " height = " <<
+	// newNode->getHeight() << std::endl;
 
 	updateHeight((newNode->getParent()));
 }
 
 /**
-* Checks the heights of tree starting at given node-> returns the node with invalid height->
+* Checks the heights of tree starting at given node-> returns the node with
+* invalid height->
 * returns NULL if the tree is balanced 
 */
 template<typename Key, typename Value>
-AVLNode<Key, Value>* AVLTree<Key, Value>::findInvalidHeight(AVLNode<Key, Value>* begin)
+AVLNode<Key, Value>* AVLTree<Key, Value>::findInvalidHeight(AVLNode<Key, Value>*
+ begin)
 {
-	// std::cout << "trying to find invalid node at " << begin->getValue() << std::endl;
+	// std::cout << "trying to find invalid node at " << begin->getValue() <<
+	// std::endl;
 	AVLNode<Key, Value>* location = begin;
 	while (location != NULL)
 	{
@@ -573,7 +589,8 @@ AVLNode<Key, Value>* AVLTree<Key, Value>::findInvalidHeight(AVLNode<Key, Value>*
 		}
 		else if (location->getRight() == NULL)
 		{
-			// std::cout << "there is a left child with height: " << location->getLeft()->getHeight() << std::endl;
+			// std::cout << "there is a left child with height: " << 
+			// location->getLeft()->getHeight() << std::endl;
 			if (location->getLeft()->getHeight() != 0)
 			{
 				// y = location->getLeft();
@@ -614,7 +631,8 @@ AVLNode<Key, Value>* AVLTree<Key, Value>::findInvalidHeight(AVLNode<Key, Value>*
 * perform zigzig for left
 */
 template<typename Key, typename Value>
-void AVLTree<Key, Value>::zigzigLeft(AVLNode<Key,Value>* x, AVLNode<Key,Value>* y, AVLNode<Key,Value>* z)
+void AVLTree<Key, Value>::zigzigLeft(AVLNode<Key,Value>* x, AVLNode<Key,Value>* y, 
+	AVLNode<Key,Value>* z)
 {
 	// AVLNode<Key,Value>* T0 = x->getLeft();
 	// AVLNode<Key,Value>* T1 = x->getRight();
@@ -674,7 +692,8 @@ void AVLTree<Key, Value>::zigzigLeft(AVLNode<Key,Value>* x, AVLNode<Key,Value>* 
 * perform zigzag for left
 */
 template<typename Key, typename Value>
-void AVLTree<Key, Value>::zigzagLeft(AVLNode<Key,Value>* x, AVLNode<Key,Value>* y, AVLNode<Key,Value>* z)
+void AVLTree<Key, Value>::zigzagLeft(AVLNode<Key,Value>* x, AVLNode<Key,Value>* y, 
+	AVLNode<Key,Value>* z)
 {
 	// std::cout << "	!! Left zig zag" << std::endl;
 	AVLNode<Key,Value>* T0 = y->getLeft();
@@ -740,7 +759,8 @@ void AVLTree<Key, Value>::zigzagLeft(AVLNode<Key,Value>* x, AVLNode<Key,Value>* 
 * perform zigzig for right
 */
 template<typename Key, typename Value>
-void AVLTree<Key, Value>::zigzigRight(AVLNode<Key,Value>* x, AVLNode<Key,Value>* y, AVLNode<Key,Value>* z)
+void AVLTree<Key, Value>::zigzigRight(AVLNode<Key,Value>* x, AVLNode<Key,Value>* y, 
+	AVLNode<Key,Value>* z)
 {
 	AVLNode<Key,Value>* T0 = z->getLeft();
 	AVLNode<Key,Value>* T1 = y->getLeft();
@@ -798,7 +818,8 @@ void AVLTree<Key, Value>::zigzigRight(AVLNode<Key,Value>* x, AVLNode<Key,Value>*
 * perform zigzif for right
 */
 template<typename Key, typename Value>
-void AVLTree<Key, Value>::zigzagRight(AVLNode<Key,Value>* x, AVLNode<Key,Value>* y, AVLNode<Key,Value>* z)
+void AVLTree<Key, Value>::zigzagRight(AVLNode<Key,Value>* x, AVLNode<Key,Value>* y, 
+	AVLNode<Key,Value>* z)
 {
 	AVLNode<Key,Value>* T0 = z->getLeft();
 	AVLNode<Key,Value>* T1 = x->getLeft();
@@ -868,7 +889,8 @@ void AVLTree<Key, Value>::insertHelper(const std::pair<Key, Value>& keyValuePair
 
 	if (this->mRoot == NULL)
 	{
-		AVLNode<Key, Value>* addMe = new AVLNode<Key, Value> (keyValuePair.first, keyValuePair.second, NULL);
+		AVLNode<Key, Value>* addMe = new AVLNode<Key, Value> (keyValuePair.first, 
+			keyValuePair.second, NULL);
 		addMe->setHeight(0);
 	 	this->mRoot = addMe;
 		return;
@@ -887,7 +909,8 @@ void AVLTree<Key, Value>::insertHelper(const std::pair<Key, Value>& keyValuePair
 		else if (toFind < location->getKey())
 		{
 			// key is less than current location
-			// std::cout << "key :" << toFind << " is less than " << location->getValue() << std::endl;
+			// std::cout << "key :" << toFind << " is less than " <<
+			// location->getValue() << std::endl;
 
 			if (location->getLeft() != NULL)
 			{
@@ -902,7 +925,8 @@ void AVLTree<Key, Value>::insertHelper(const std::pair<Key, Value>& keyValuePair
 				found = true;
 				if (location != NULL)
 				{
-					AVLNode<Key, Value>* toInsert = new AVLNode<Key, Value> (keyValuePair.first, keyValuePair.second, location);
+					AVLNode<Key, Value>* toInsert = new AVLNode<Key, Value> 
+					(keyValuePair.first, keyValuePair.second, location);
 					toInsert->setHeight(0);
 					location->setLeft(toInsert);
 				}
@@ -924,7 +948,8 @@ void AVLTree<Key, Value>::insertHelper(const std::pair<Key, Value>& keyValuePair
 				// no child here. create a new node and place it here
 
 				found = true;
-				AVLNode<Key, Value>* toInsert = new AVLNode<Key, Value> (keyValuePair.first, keyValuePair.second, location);
+				AVLNode<Key, Value>* toInsert = new AVLNode<Key, Value> 
+				(keyValuePair.first, keyValuePair.second, location);
 				toInsert->setHeight(0);
 				location->setRight(toInsert);
 			}
