@@ -192,6 +192,7 @@ template<typename Key, typename Value>
 void AVLTree<Key, Value>::remove(const Key& key)
 {
 	// TODO
+	std::cout << "\n !!! in remove" << std::endl;
 
 	// remove value as if it is a BST
 	AVLNode<Key, Value>* problemNode;
@@ -200,9 +201,11 @@ void AVLTree<Key, Value>::remove(const Key& key)
 	if (checkHere == NULL)
 	{
 		problemNode = NULL;
+		std::cout << "No node to check" << std::endl;
 	}
 	else
 	{
+		std::cout << "checking node " << checkHere->getValue() << checkHere->getKey() << std::endl;
 		problemNode = findInvalidHeight(checkHere);
 	}
 
@@ -214,6 +217,7 @@ void AVLTree<Key, Value>::remove(const Key& key)
 	while (problemNode != NULL)
 	{
 		// determine if it is a zigzig or a zig zag and fix
+		std::cout << "problem node is " << problemNode->getValue() << problemNode->getKey() << std::endl;
 		checkHere = fixProblem(problemNode);
 
 
@@ -294,7 +298,7 @@ AVLNode<Key, Value>* AVLTree<Key, Value>::removeHelper(const Key& key)
 		r = toDelete->getRight();
 		if (r->getLeft() != NULL)
 		{
-			// minimum value is the left most node
+			// minimum value is the left most node of right subtree
 
 			while(r->getLeft() != NULL)
 			{
@@ -373,7 +377,14 @@ AVLNode<Key, Value>* AVLTree<Key, Value>::removeHelper(const Key& key)
 		int rh = -1;
 		if (r->getLeft() != NULL) lh = r->getLeft()->getHeight();
 		if (r->getRight() != NULL) rh = r->getRight()->getHeight();
+
 		r->setHeight(1+ std::max(lh,rh));
+		
+		if (r->getRight() != NULL)
+		{
+			return r->getRight();
+		}
+
 		return r;
 		
 	}
