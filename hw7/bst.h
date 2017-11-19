@@ -7,8 +7,10 @@
 #include <utility>
 
 /**
-* A templated class for a Node in a search tree. The getters for parent/left/right are virtual so that they
-* can be overridden for future kinds of search trees, such as Red Black trees, Splay trees, and AVL trees.
+* A templated class for a Node in a search tree. The getters for
+* parent/left/right are virtual so that they
+* can be overridden for future kinds of search trees, such as
+* Red Black trees, Splay trees, and AVL trees.
 */
 template <typename Key, typename Value>
 class Node

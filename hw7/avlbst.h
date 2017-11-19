@@ -8,8 +8,10 @@
 #include <algorithm>
 
 /**
-* A special kind of node for an AVL tree, which adds the height as a data member, plus 
-* other additional helper functions. You do NOT need to implement any functionality or
+* A special kind of node for an AVL tree, which adds the height as
+* a data member, plus 
+* other additional helper functions. You do NOT need to implement
+* any functionality or
 * add additional data members or helper functions.
 */
 template <typename Key, typename Value>
@@ -379,7 +381,7 @@ AVLNode<Key, Value>* AVLTree<Key, Value>::removeHelper(const Key& key)
 		if (r->getRight() != NULL) rh = r->getRight()->getHeight();
 
 		r->setHeight(1+ std::max(lh,rh));
-		
+
 		if (r->getRight() != NULL)
 		{
 			return r->getRight();
