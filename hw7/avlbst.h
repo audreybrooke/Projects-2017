@@ -446,7 +446,8 @@ AVLNode<Key, Value>* AVLTree<Key, Value>::fixProblem(AVLNode<Key, Value>*
 	}
 
 	// std::cout << "entering fixproblem. problem node is " << 
-	// problemNode->getValue() << " height is" << problemNode->getHeight() << std::endl;
+	// problemNode->getValue() << " height is" << problemNode->getHeight()
+	// << std::endl;
 	if (problemNode->getRight() != NULL)
 	{
 		// std::cout << "right height = " << problemNode->getRight()->getHeight()
