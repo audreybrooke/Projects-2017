@@ -200,7 +200,7 @@ template<typename Key, typename Value>
 void AVLTree<Key, Value>::remove(const Key& key)
 {
 	// TODO
-	std::cout << "\n !!! in remove" << std::endl;
+	// std::cout << "\n !!! in remove" << std::endl;
 
 	// remove value as if it is a BST
 	AVLNode<Key, Value>* problemNode;

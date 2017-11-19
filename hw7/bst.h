@@ -391,7 +391,6 @@ template<typename Key, typename Value>
 void BinarySearchTree<Key, Value>::print() const
 {
 	printRoot(mRoot);
-	std::cout << "\n";
 }
 
 /**
