@@ -232,18 +232,65 @@ bool compareLine(int p1Dest, int p2Dest, intMap& linesMap)
 bool compareBE(BooleanExpression* p1Bool, BooleanExpression* p2Bool, 
 	stringMap variablesMap, stringMap arrayVariablesMap)
 {
-	if(p1Bool->GetClassId() != p2Bool->GetClassId())
-		return false;
+	//if(p1Bool->GetClassId() != p2Bool->GetClassId())
+	//	return false;
+
+	string type1 = p1Bool->GetClassId();
+	string type2 = p2Bool->GetClassId();
 
 	ArithmeticExpression* rhs1 = ((BinaryBooleanExpression*)p1Bool)->GetRhs();
 	ArithmeticExpression* lhs1 = ((BinaryBooleanExpression*)p1Bool)->GetLhs();
 	ArithmeticExpression* rhs2 = ((BinaryBooleanExpression*)p2Bool)->GetRhs();
 	ArithmeticExpression* lhs2 = ((BinaryBooleanExpression*)p2Bool)->GetLhs();
 
-	bool rhsComp = compareAE(rhs1, rhs2, variablesMap, arrayVariablesMap);
-	bool lhsComp = compareAE(lhs1, lhs2, variablesMap, arrayVariablesMap);
 
-	if (!rhsComp || !lhsComp)
+	if (type1 == type2)
+	{
+
+		bool rhsComp = compareAE(rhs1, rhs2, variablesMap, arrayVariablesMap);
+		bool lhsComp = compareAE(lhs1, lhs2, variablesMap, arrayVariablesMap);
+		
+		if (!rhsComp || !lhsComp)
+		{
+			if (type1 == "EqualToExpression")
+			{
+				// could be "equivalent" if order is swithced
+				// eq1 is lhs1 = rhs1
+				// eq2 is lhs2 = rhs2
+				// these are "equivalent" when: lhs1 = rhs2 and rhs1 = lhs2
+
+				bool crossComp1 = compareAE(lhs1, rhs2, variablesMap, arrayVariablesMap);
+				bool crossComp2 = compareAE(rhs1, lhs2, variablesMap, arrayVariablesMap);
+				if (crossComp1 && crossComp2) return true;
+			}
+			return false;
+		}
+	}
+	else if (type1 == "LessThanExpression" && type2 == "GreaterThanExpression")
+	{
+		// type1 is lhs1 < rhs1
+		// type2 is lhs2 > rhs2
+		// these are "equivalent" when: lhs1 = rhs2 and rhs1 = lhs2
+		// aka lhs1 < rhs1 = lhs2 > rhs2
+
+		bool crossComp1 = compareAE(lhs1, rhs2, variablesMap, arrayVariablesMap);
+		bool crossComp2 = compareAE(rhs1, lhs2, variablesMap, arrayVariablesMap);
+		if (crossComp1 && crossComp2) return true;
+		return false;
+	}
+	else if (type2 == "LessThanExpression" && type1 == "GreaterThanExpression")
+	{
+		// type2 is lhs2 < rhs2
+		// type1 is lhs1 > rhs1
+		// these are "equivalent" when: lhs2 = rhs1 and rhs2 = lhs1
+		// aka lhs2 < rhs2 = lhs1 > rhs1
+
+		bool crossComp1 = compareAE(lhs1, rhs2, variablesMap, arrayVariablesMap);
+		bool crossComp2 = compareAE(rhs1, lhs2, variablesMap, arrayVariablesMap);
+		if (crossComp1 && crossComp2) return true;
+		return false;
+	}
+	else if (type1 != type2)
 	{
 		return false;
 	}
@@ -447,6 +494,39 @@ bool compareAE(ArithmeticExpression* p1AE, ArithmeticExpression* p2AE,
 		return compareVar(((VariableArithmeticExpression*)v1), ((VariableArithmeticExpression*)v2), variablesMap, arrayVariablesMap);
 		*/
 	}
+	else if  (type1 == "AdditionExpression" || type1 == "MultiplicationExpression")
+	{
+		ArithmeticExpression* rhs1 = ((BinaryArithmeticExpression*)p1AE)->GetRhs();
+		ArithmeticExpression* rhs2 = ((BinaryArithmeticExpression*)p2AE)->GetRhs();
+		ArithmeticExpression* lhs1 = ((BinaryArithmeticExpression*)p1AE)->GetLhs();
+		ArithmeticExpression* lhs2 = ((BinaryArithmeticExpression*)p2AE)->GetLhs();
+
+		bool compRhs = compareAE(rhs1, rhs2, variablesMap, arrayVariablesMap);
+		bool compLhs = compareAE(lhs1, lhs2, variablesMap, arrayVariablesMap);
+
+		// "equivalent" if: rhs1 = lhs2 and lhs1 = rhs2
+		// lhs1 + rhs1 = rhs2 + lhs1
+
+		// "equivalent" if: lhs1 = rhs2 and rhs1 = lhs2
+		// lhs1 * rhs1 = rhs2 * lhs2
+
+		bool crossComp1 = compareAE(rhs1, lhs2, variablesMap, arrayVariablesMap);
+		bool crossComp2 = compareAE(lhs1, rhs2, variablesMap, arrayVariablesMap);
+
+
+
+		if (!compRhs || !compLhs)
+		{
+			// do not match, there was no cheating,
+			// BUT WAIT! check if there was a switch first
+			if (crossComp1 && crossComp2)
+			{
+				return true;
+			}
+			return false;
+		}
+
+	}
 	else
 	{
 		ArithmeticExpression* rhs1 = ((BinaryArithmeticExpression*)p1AE)->GetRhs();
@@ -461,14 +541,12 @@ bool compareAE(ArithmeticExpression* p1AE, ArithmeticExpression* p2AE,
 		return true;
 	}
 
-	// do not need to specify which type of expression for addition,
-	// subtraction, multiplication or division because
-	// th first if statment handles it
+	// do not need to specify which type of expression for
+	// subtraction or division because
+	// the first if statment handles it
 
 	/*
-	else if  (type1 == "AdditionExpression")
 	else if (type1 == "SubtractionExpression")
-	else if (type1 == "MultiplicationExpression")
 	else if (type1 == "DivisionExpression")
 	*/
 
