@@ -288,6 +288,14 @@ bool compareVar(VariableArithmeticExpression* p1V, VariableArithmeticExpression*
 		else
 		{
 			// mapping does not exist yet, add it to the map
+			// first, check if varName2 already is a value
+			// iterate through mapping, check if any value
+			// already equals varName2, if so, return false
+			for (AVLTree<string, string>::iterator it = variablesMap->begin(); it != variablesMap->end(); ++it)
+			{
+				if ((*(it)).second == varName2) return false;
+			}
+
 			variablesMap->insert(pair<string, string>(varName1, varName2));
 		}
 	}
@@ -317,6 +325,14 @@ bool compareVar(VariableArithmeticExpression* p1V, VariableArithmeticExpression*
 		else
 		{
 			// mapping does not exist yet, add it to the map
+			// first, check if arrName2 already is a value
+			// iterate through mapping, check if any value
+			// already equals arrName2, if so, return false
+			for (AVLTree<string, string>::iterator it = arrayVariablesMap->begin(); it != arrayVariablesMap->end(); ++it)
+			{
+				if ((*(it)).second == arrName2) return false;
+			}
+
 			arrayVariablesMap->insert(pair<string, string>(arrName1, arrName2));
 		}
 	}
@@ -349,17 +365,89 @@ bool compareAE(ArithmeticExpression* p1AE, ArithmeticExpression* p2AE,
 	}
 	else if (type1 == "IntVariableArithmeticExpression")
 	{
+		// variable is an int
+
+		IntVariable* IntVar1 = ((IntVariableArithmeticExpression*)p1AE)->GetIntVariable();
+		IntVariable* IntVar2 = ((IntVariableArithmeticExpression*)p2AE)->GetIntVariable();
+		string varName1 = IntVar1->GetName();
+		string varName2 = IntVar2->GetName();
+
+		if (variablesMap->find(varName1) != variablesMap->end())
+		{
+			// this mapping exists
+			if ((*(variablesMap->find(varName1))).second != varName2)
+			{
+				// this variable does not map to the same name it did before
+				return false;
+			}
+		}
+		else
+		{
+			// mapping does not exist yet, add it to the map
+			// first, check if varName2 already is a value
+			// iterate through mapping, check if any value
+			// already equals varName2, if so, return false
+			for (AVLTree<string, string>::iterator it = variablesMap->begin(); it != variablesMap->end(); ++it)
+			{
+				if ((*(it)).second == varName2) return false;
+			}
+
+			// mapping does not exist yet, add it to the map
+			variablesMap->insert(pair<string, string>(varName1, varName2));
+		
+		}
+
+		/*
 		IntVariable* v1 = ((IntVariableArithmeticExpression*)p1AE)->GetIntVariable();
 		IntVariable* v2 = ((IntVariableArithmeticExpression*)p2AE)->GetIntVariable();
 
 		return compareVar(((VariableArithmeticExpression*)v1), ((VariableArithmeticExpression*)v2), variablesMap, arrayVariablesMap);
+		*/
 	}
 	else if (type1 == "ArrayVariableArithmeticExpression")
 	{
+
+		// variable is an array
+
+		// check if index value is the same
+		ArithmeticExpression* index1 = ((ArrayVariableArithmeticExpression*)p1AE)->GetArrayIndex();
+		ArithmeticExpression* index2 = ((ArrayVariableArithmeticExpression*)p2AE)->GetArrayIndex();
+		if (! compareAE(index1, index2, variablesMap, arrayVariablesMap)) return false;
+
+		// check if array name is the same
+		ArrayVariable* ArrVar1 = ((ArrayVariableArithmeticExpression*)p1AE)->GetArrayVariable();
+		ArrayVariable* ArrVar2 = ((ArrayVariableArithmeticExpression*)p2AE)->GetArrayVariable();
+		string arrName1 = ArrVar1->GetName();
+		string arrName2 = ArrVar2->GetName();
+		if (arrayVariablesMap->find(arrName1) != arrayVariablesMap->end())
+		{
+			// this mapping exists
+			if ((*(arrayVariablesMap->find(arrName1))).second != arrName2)
+			{
+				// variable does not map to same name as it did before
+				return false;
+			}
+		}
+		else
+		{
+			// mapping does not exist yet, add it to the map
+			// first, check if arrName2 already is a value
+			// iterate through mapping, check if any value
+			// already equals arrName2, if so, return false
+			for (AVLTree<string, string>::iterator it = arrayVariablesMap->begin(); it != arrayVariablesMap->end(); ++it)
+			{
+				if ((*(it)).second == arrName2) return false;
+			}
+
+			arrayVariablesMap->insert(pair<string, string>(arrName1, arrName2));
+		}
+	
+		/*
 		ArrayVariable* v1 = ((ArrayVariableArithmeticExpression*)p1AE)->GetArrayVariable();
 		ArrayVariable* v2 = ((ArrayVariableArithmeticExpression*)p2AE)->GetArrayVariable();
 
 		return compareVar(((VariableArithmeticExpression*)v1), ((VariableArithmeticExpression*)v2), variablesMap, arrayVariablesMap);
+		*/
 	}
 	else
 	{
