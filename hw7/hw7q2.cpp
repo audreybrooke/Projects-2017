@@ -1,5 +1,8 @@
 #include "avlbst.h"
 #include "Command.h"
+#include "BooleanExpression.h"
+#include "ArithmeticExpression.h"
+#include "Variable.h"
 #include "RecursiveParser.h"
 #include <string>
 #include <iostream>
@@ -30,6 +33,7 @@ int main(int argc, char const *argv[])
 	if (argc < 3)
 	{
 		cout << "please provide 2 file names" << endl;
+		return 0;
 	}
 
 	ifstream prg1 (argv[1]);
@@ -38,6 +42,7 @@ int main(int argc, char const *argv[])
 	if (prg1.fail() || prg2.fail())
 	{
 		cout << "please provide valid file/s" << endl;
+		return 0;
 	}
 
 	// create the parsers for program 1 and 2
@@ -73,6 +78,38 @@ int main(int argc, char const *argv[])
 		// there was cheating
 		cout << "cheating" << endl;
 		// print mapping!!!
+		vector<string> varNamesPrg1 = program1->GetIntVariables();
+		vector<string> arrNamesPrg1 = program1->GetArrayVariables();
+
+		int vari = 0;
+		int arri = 0;
+		while (vari < (int) varNamesPrg1.size() && arri < (int) arrNamesPrg1.size())
+		{
+			if (varNamesPrg1[vari] < arrNamesPrg1[arri])
+			{
+				string var2 = (*(variablesMap1to2->find(varNamesPrg1[vari]))).second;
+				cout << varNamesPrg1[vari] << " " << var2 << endl;
+				vari++;
+			}
+			else
+			{
+				string arr2 = (*(arrayVariablesMap1to2->find(arrNamesPrg1[arri]))).second;
+				cout << arrNamesPrg1[arri] << " " << arr2 << endl;
+				arri++;
+			}
+		}
+		for (vari = vari; vari < (int) varNamesPrg1.size(); vari++)
+		{
+			string var2 = (*(variablesMap1to2->find(varNamesPrg1[vari]))).second;
+			cout << varNamesPrg1[vari] << " " << var2 << endl;
+			vari++;
+		}
+		for (arri = arri; arri < (int) arrNamesPrg1.size(); arri++)
+		{
+			string arr2 = (*(arrayVariablesMap1to2->find(arrNamesPrg1[arri]))).second;
+			cout << arrNamesPrg1[arri] << " " << arr2 << endl;
+			arri++;
+		}
 	}
 
 	delete program1;
@@ -112,32 +149,33 @@ bool checkCheating(stringMap& variablesMap, stringMap&
 		if (commandId1 != commandId2) return false;
 		else if (commandId1 == "PrintCommand")
 		{
-			ArithmeticExpression* p1AE = linesPrg1[i]->GetArithmeticExpression();
-			ArithmeticExpression* p2AE = linesPrg2[i]->GetArithmeticExpression();
+			PrintCommand* printC1 = (PrintCommand*) linesPrg1[i];
+			ArithmeticExpression* p1AE = printC1->GetArithmeticExpression();
+			ArithmeticExpression* p2AE = ((PrintCommand*)linesPrg2[i])->GetArithmeticExpression();
 			bool aeResult = compareAE(p1AE, p2AE, variablesMap, arrayVariablesMap);
 			if (!aeResult) return false;
 		}
 		else if (commandId1 == "LetCommand")
 		{
 			// compare the variables
-			VariableArithmeticExpression* p1V = linesPrg1[i]->
+			VariableArithmeticExpression* p1V = ((LetCommand*)linesPrg1[i])->
 			GetVariableExpression();
-			VariableArithmeticExpression* p2V = linesPrg2[i]->
+			VariableArithmeticExpression* p2V = ((LetCommand*)linesPrg2[i])->
 			GetVariableExpression();
 			bool vResult = compareVar(p1V, p2V, variablesMap, arrayVariablesMap);
 			if (!vResult) return false;
 
 			// compare the AExps
-			ArithmeticExpression* p1AE = linesPrg1[i]->GetArithmeticExpression();
-			ArithmeticExpression* p2AE = linesPrg2[i]->GetArithmeticExpression();
+			ArithmeticExpression* p1AE = ((LetCommand*)linesPrg1[i])->GetArithmeticExpression();
+			ArithmeticExpression* p2AE = ((LetCommand*)linesPrg2[i])->GetArithmeticExpression();
 			bool aeResult = compareAE(p1AE, p2AE, variablesMap, arrayVariablesMap);
 			if (!aeResult) return false;
 		}
 		else if (commandId1 == "GoToCommand")
 		{
 			// compare destination lines
-			int p1Dest = linesPrg1[i]->GetDstLine();
-			int p2Dest = linesPrg2[i]->GetDstLine();
+			int p1Dest = ((GoToCommand*)linesPrg1[i])->GetDstLine();
+			int p2Dest = ((GoToCommand*)linesPrg2[i])->GetDstLine();
 			bool lResult = compareLine(p1Dest, p2Dest, linesMap);
 			if (!lResult) return false;
 
@@ -145,22 +183,22 @@ bool checkCheating(stringMap& variablesMap, stringMap&
 		else if (commandId1 == "IfThenCommand")
 		{
 			// compare destination lines
-			int p1Dest = linesPrg1[i]->GetDstLine();
-			int p2Dest = linesPrg2[i]->GetDstLine();
+			int p1Dest = ((IfThenCommand*)linesPrg1[i])->GetDstLine();
+			int p2Dest = ((IfThenCommand*)linesPrg2[i])->GetDstLine();
 			bool lResult = compareLine(p1Dest, p2Dest, linesMap);
 			if (!lResult) return false;
 
 			// compare boolean expressions
-			BooleanExpression* p1Bool = linesPrg1[i]->GetBooleanExpression();
-			BooleanExpression* p2Bool = linesPrg2[i]->GetBooleanExpression();
+			BooleanExpression* p1Bool = ((IfThenCommand*)linesPrg1[i])->GetBooleanExpression();
+			BooleanExpression* p2Bool = ((IfThenCommand*)linesPrg2[i])->GetBooleanExpression();
 			bool bResult = compareBE(p1Bool, p2Bool, variablesMap, arrayVariablesMap);
 			if (!bResult) return false;
 		}
 		else if (commandId1 == "GoSubCommand")
 		{
 			// compare destination lines
-			int p1Dest = linesPrg1[i]->GetDstLine();
-			int p2Dest = linesPrg2[i]->GetDstLine();
+			int p1Dest = ((GoSubCommand*)linesPrg1[i])->GetDstLine();
+			int p2Dest = ((GoSubCommand*)linesPrg2[i])->GetDstLine();
 			bool lResult = compareLine(p1Dest, p2Dest, linesMap);
 			if (!lResult) return false;
 		}
@@ -180,7 +218,7 @@ bool checkCheating(stringMap& variablesMap, stringMap&
 */
 bool compareLine(int p1Dest, int p2Dest, intMap& linesMap)
 {
-	if (*(linesMap->find(i)).getValue() != p2Dest)
+	if ((*(linesMap->find(p1Dest))).second != p2Dest)
 		return false;
 	/*
 	if (linesMap[i] != p2Dest)
@@ -199,10 +237,10 @@ bool compareBE(BooleanExpression* p1Bool, BooleanExpression* p2Bool,
 	if(p1Bool->GetClassId() != p2Bool->GetClassId())
 		return false;
 
-	ArithmeticExpression* rhs1 = p1Bool->GetRhs();
-	ArithmeticExpression* lhs1 = p1Bool->GetLhs();
-	ArithmeticExpression* rhs2 = p2Bool->GetRhs();
-	ArithmeticExpression* lhs2 = p2Bool->GetLhs();
+	ArithmeticExpression* rhs1 = ((BinaryBooleanExpression*)p1Bool)->GetRhs();
+	ArithmeticExpression* lhs1 = ((BinaryBooleanExpression*)p1Bool)->GetLhs();
+	ArithmeticExpression* rhs2 = ((BinaryBooleanExpression*)p2Bool)->GetRhs();
+	ArithmeticExpression* lhs2 = ((BinaryBooleanExpression*)p2Bool)->GetLhs();
 
 	bool rhsComp = compareAE(rhs1, rhs2, variablesMap, arrayVariablesMap);
 	bool lhsComp = compareAE(lhs1, lhs2, variablesMap, arrayVariablesMap);
@@ -222,8 +260,8 @@ bool compareBE(BooleanExpression* p1Bool, BooleanExpression* p2Bool,
 bool compareVar(VariableArithmeticExpression* p1V, VariableArithmeticExpression* 
 	p2V, stringMap variablesMap, stringMap arrayVariablesMap)
 {
-	string type1 = p1v->GetClassId();
-	string type2 = p2V->GetClassId()
+	string type1 = p1V->GetClassId();
+	string type2 = p2V->GetClassId();
 	if (type1 != type2)
 	{
 		return false;
@@ -233,15 +271,15 @@ bool compareVar(VariableArithmeticExpression* p1V, VariableArithmeticExpression*
 	{
 		// variable is an int
 
-		IntVariable* 1IntVar = p1V->GetIntVariable();
-		IntVariable* 2IntVar = p2V->GetIntVariable();
-		string 1varName = 1IntVar->GetName();
-		string 2varName = 2IntVar->GetName();
+		IntVariable* IntVar1 = ((IntVariableArithmeticExpression*)p1V)->GetIntVariable();
+		IntVariable* IntVar2 = ((IntVariableArithmeticExpression*)p2V)->GetIntVariable();
+		string varName1 = IntVar1->GetName();
+		string varName2 = IntVar2->GetName();
 
-		if (variablesMap->find(1varName) != variablesMap->end())
+		if (variablesMap->find(varName1) != variablesMap->end())
 		{
 			// this mapping exists
-			if (*(variablesMap->find(1varName))->getValue() != 2varName)
+			if ((*(variablesMap->find(varName1))).second != varName2)
 			{
 				// this variable does not map to the same name it did before
 				return false;
@@ -250,7 +288,7 @@ bool compareVar(VariableArithmeticExpression* p1V, VariableArithmeticExpression*
 		else
 		{
 			// mapping does not exist yet, add it to the map
-			variablesMap->insert(pair<string, string>(1varName, 2varName));
+			variablesMap->insert(pair<string, string>(varName1, varName2));
 		}
 	}
 	else
@@ -258,19 +296,19 @@ bool compareVar(VariableArithmeticExpression* p1V, VariableArithmeticExpression*
 		// variable is an array
 
 		// check if index value is the same
-		ArithmeticExpression* index1 = p1v->GetArrayIndex();
-		ArithmeticExpression* index2 = p2v->GetArrayIndex();
+		ArithmeticExpression* index1 = ((ArrayVariableArithmeticExpression*)p1V)->GetArrayIndex();
+		ArithmeticExpression* index2 = ((ArrayVariableArithmeticExpression*)p2V)->GetArrayIndex();
 		if (! compareAE(index1, index2, variablesMap, arrayVariablesMap)) return false;
 
 		// check if array name is the same
-		ArrayVariable* 1ArrVar = p1v->GetArrayVariable();
-		ArrayVariable* 2ArrVar = p2v->GetArrayVariable();
-		string 1arrName = 1ArrVar->GetName();
-		string 2arrName = 2ArrVar->GetName();
-		if (arrayVariablesMap->find(1arrName) != arrayVariablesMap->end())
+		ArrayVariable* ArrVar1 = ((ArrayVariableArithmeticExpression*)p1V)->GetArrayVariable();
+		ArrayVariable* ArrVar2 = ((ArrayVariableArithmeticExpression*)p2V)->GetArrayVariable();
+		string arrName1 = ArrVar1->GetName();
+		string arrName2 = ArrVar2->GetName();
+		if (arrayVariablesMap->find(arrName1) != arrayVariablesMap->end())
 		{
 			// this mapping exists
-			if (*(arrayVariablesMap->find(1ArrVar))->getValue != 2arrName)
+			if ((*(arrayVariablesMap->find(arrName1))).second != arrName2)
 			{
 				// variable does not map to same name as it did before
 				return false;
@@ -279,7 +317,7 @@ bool compareVar(VariableArithmeticExpression* p1V, VariableArithmeticExpression*
 		else
 		{
 			// mapping does not exist yet, add it to the map
-			arrayVariablesMap->insert(pair<string, string>(1arrName, 2arrName));
+			arrayVariablesMap->insert(pair<string, string>(arrName1, arrName2));
 		}
 	}
 
@@ -304,32 +342,51 @@ bool compareAE(ArithmeticExpression* p1AE, ArithmeticExpression* p2AE,
 
 	else if (type1 == "ConstantArithmeticExpression")
 	{
-		/* code */
+		int const1 = ((ConstantArithmeticExpression*)p1AE)->GetConstantValue();
+		int const2 = ((ConstantArithmeticExpression*)p2AE)->GetConstantValue();
+		if (const1 != const2) return false;
+		return true;
 	}
 	else if (type1 == "IntVariableArithmeticExpression")
 	{
-		/* code */
+		IntVariable* v1 = ((IntVariableArithmeticExpression*)p1AE)->GetIntVariable();
+		IntVariable* v2 = ((IntVariableArithmeticExpression*)p2AE)->GetIntVariable();
+
+		return compareVar(((VariableArithmeticExpression*)v1), ((VariableArithmeticExpression*)v2), variablesMap, arrayVariablesMap);
 	}
 	else if (type1 == "ArrayVariableArithmeticExpression")
 	{
-		/* code */
+		ArrayVariable* v1 = ((ArrayVariableArithmeticExpression*)p1AE)->GetArrayVariable();
+		ArrayVariable* v2 = ((ArrayVariableArithmeticExpression*)p2AE)->GetArrayVariable();
+
+		return compareVar(((VariableArithmeticExpression*)v1), ((VariableArithmeticExpression*)v2), variablesMap, arrayVariablesMap);
 	}
-	else if (type1 == "AdditionExpression")
+	else
 	{
-		/* code */
+		ArithmeticExpression* rhs1 = ((BinaryArithmeticExpression*)p1AE)->GetRhs();
+		ArithmeticExpression* rhs2 = ((BinaryArithmeticExpression*)p2AE)->GetRhs();
+		ArithmeticExpression* lhs1 = ((BinaryArithmeticExpression*)p1AE)->GetLhs();
+		ArithmeticExpression* lhs2 = ((BinaryArithmeticExpression*)p2AE)->GetLhs();
+
+		bool compRhs = compareAE(rhs1, rhs2, variablesMap, arrayVariablesMap);
+		bool compLhs = compareAE(lhs1, lhs2, variablesMap, arrayVariablesMap);
+
+		if (!compRhs || !compLhs) return false;
+		return true;
 	}
+
+	// do not need to specify which type of expression for addition,
+	// subtraction, multiplication or division because
+	// th first if statment handles it
+
+	/*
+	else if  (type1 == "AdditionExpression")
 	else if (type1 == "SubtractionExpression")
-	{
-		/* code */
-	}
-	else if (type1 == "")
-	{
-		/* code */
-	}
-	else if (type1 == "")
-	{
-		/* code */
-	}
+	else if (type1 == "MultiplicationExpression")
+	else if (type1 == "DivisionExpression")
+	*/
+
+	return true;
 }
 
 
