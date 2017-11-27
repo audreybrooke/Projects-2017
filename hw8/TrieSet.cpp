@@ -6,7 +6,7 @@ using namespace std;
 
 
 
-
+/*
 int main(int argc, char const *argv[])
 {
 	TrieSet* set = new TrieSet();
@@ -31,7 +31,7 @@ int main(int argc, char const *argv[])
 
 	return 0;
 }
-
+*/
 
 
 TrieSet::TrieSet()

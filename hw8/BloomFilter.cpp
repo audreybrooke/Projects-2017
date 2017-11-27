@@ -4,11 +4,12 @@
 
 using namespace std;
 
-
+/*
 int main(int argc, char const *argv[])
 {
 	BloomFilter* bf = new BloomFilter(50);
 
+	
 	bf->insert("https://www.usc.edu/cs_rules");
 	bf->insert("https://www.usc.edu/cs_ruled");
 	bf->insert("https://www.usc.edu/cs_rule");
@@ -37,13 +38,15 @@ int main(int argc, char const *argv[])
 	cout << bf->contains("https://www.usc.edu/cs_rulez") << endl;	// 0?
 	cout << bf->contains("https://www.usc.edu/cs_rulde") << endl;	// 0?
 	cout << bf->contains("https://www.usc.edu/cs_rulel") << endl;	// 0?
-
+	
 
 
 	delete bf;
 
 	return 0;
 }
+
+*/
 
 /*
 * Add this string to the Bloom Filter.
