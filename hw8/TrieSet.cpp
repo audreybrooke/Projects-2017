@@ -1,5 +1,5 @@
 #include <string>
-#include "trie.h"
+#include "TrieSet.h"
 #include <iostream>
 
 using namespace std;

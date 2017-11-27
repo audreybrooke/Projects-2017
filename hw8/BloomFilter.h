@@ -3,7 +3,9 @@
 class BloomFilter {
   public:
 
-  BloomFilter (unsigned int size = 11); // Constructor for the given size (see below).
+  BloomFilter (unsigned int size = 11);
+  /* Constructor for the given 
+  size (see below).*/
   ~BloomFilter();
 
   void insert (std::string input);
@@ -12,7 +14,8 @@ class BloomFilter {
 
   bool contains (std::string input);
   /* returns whether this string is in the set.
-     Being a Bloom Filter, may sometimes return "yes" when the true answer is "no". */ 
+     Being a Bloom Filter, may sometimes return "yes" when the true
+      answer is "no". */ 
 
   protected:
   int hash1 (std::string input) const;
