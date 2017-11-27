@@ -1,4 +1,4 @@
-#include "bloom.h"
+#include "BloomFilter.h"
 #include <string>
 #include <iostream>
 
@@ -7,7 +7,7 @@ using namespace std;
 /*
 int main(int argc, char const *argv[])
 {
-	BloomFilter* bf = new BloomFilter(50);
+	BloomFilter* bf = new BloomFilter(10);
 
 	
 	bf->insert("https://www.usc.edu/cs_rules");
@@ -23,7 +23,7 @@ int main(int argc, char const *argv[])
 	bf->insert("https://www.usc.edu/cs_ruleo");
 	bf->insert("https://www.usc.edu/cs_rulek");
 	bf->insert("https://www.usc.edu/cs_rulezz");
-
+	
 	cout << bf->contains("https://www.usc.edu/cs_rules") << endl;	// 1
 	cout << bf->contains("https://www.usc.edu/cs_ruled") << endl;	// 1
 	cout << bf->contains("https://www.usc.edu/cs_rule") << endl;	// 1
@@ -38,15 +38,15 @@ int main(int argc, char const *argv[])
 	cout << bf->contains("https://www.usc.edu/cs_rulez") << endl;	// 0?
 	cout << bf->contains("https://www.usc.edu/cs_rulde") << endl;	// 0?
 	cout << bf->contains("https://www.usc.edu/cs_rulel") << endl;	// 0?
-	
+
 
 
 	delete bf;
 
 	return 0;
 }
-
 */
+
 
 /*
 * Add this string to the Bloom Filter.
@@ -117,11 +117,11 @@ int BloomFilter::hash1 (string input) const
 
 	setW(w, input);
 
-	long total;
+	long total = 0;
 
 	for (int i = 0; i < 21; ++i)
 	{
-		total += ((long)r[i] * (long)w[i]) % capacity;
+		total += (r[i] * w[i]) % capacity;
 	}
 
 	delete [] w;
@@ -145,11 +145,11 @@ int BloomFilter::hash2 (string input) const
 	setW(w, input);
 
 
-	long total;
+	long total = 0;
 
 	for (int i = 0; i < 21; ++i)
 	{
-		total += ((long)r[i] * (long)w[i]) % p;
+		total += ((r[i] * w[i]) % p);
 	}
 
 	delete [] w;
@@ -162,11 +162,11 @@ int BloomFilter::hash3 (string input) const
 	int* w = new int[21];
 	setW(w, input);
 
-	long total;
+	long total = 0;
 
 	for (int i = 0; i < 21; ++i)
 	{
-		total += ((long)w[i]) % capacity;
+		total += (w[i]) % capacity;
 	}
 
 	delete [] w;
