@@ -17,7 +17,7 @@ void populateTrie (TrieSet* &trie, vector<string>& webpages,
 	double &insertTime);
 void readInput(ifstream& in, vector<string>& webpages, 
 	vector<string>& queries);
-void calculateFalsePositives(int falsePositives, int totalNegatives, 
+void calculateFalsePositives(int& falsePositives, int& totalNegatives, 
 	vector<string>& trieResults, vector<string>& bloomFilterResults);
 void outputResults(ofstream& out, int numWP, int numQ, double trieInsertTime, 
 	double trieQueryTime, double bloomInsertTime, double bloomQueryTime, 
@@ -85,6 +85,7 @@ void outputResults(ofstream& out, int numWP, int numQ, double trieInsertTime,
 	double trieQueryTime, double bloomInsertTime, double bloomQueryTime, 
 	int falsePositives, int totalNegatives)
 {
+
 	out << numWP << " insertions\n";
 	out << numQ << " queries\n";
 
@@ -94,7 +95,7 @@ void outputResults(ofstream& out, int numWP, int numQ, double trieInsertTime,
 	out << " seconds per insertion)\n";
 	out << "total time for trie queries: " << trieQueryTime;
 	out << " seconds (" << trieQueryTime/numQ;
-	out << " seconds per query\n";
+	out << " seconds per query)\n";
 
 	//bloom results
 	out << "total time for bloom insertions: " << bloomInsertTime;
@@ -102,18 +103,21 @@ void outputResults(ofstream& out, int numWP, int numQ, double trieInsertTime,
 	out << " seconds per insertion)\n";
 	out << "total time for bloom queries: " << bloomQueryTime;
 	out << " seconds (" << bloomQueryTime/numQ;
-	out << " seconds per query\n";
+	out << " seconds per query)\n";
 
 	//false positive results
 	out << falsePositives << " false positives (";
-	out << falsePositives/totalNegatives << "false positive rate)\n";
+	if (totalNegatives == 0)
+		out << "0.0 false positive rate)";
+	else
+		out << (double)falsePositives/(double)totalNegatives << " false positive rate)";
 }
 
 /*
 * Compares the results of trie and bloom filter to determine false
 * positives
 */
-void calculateFalsePositives(int falsePositives, int totalNegatives, 
+void calculateFalsePositives(int& falsePositives, int& totalNegatives, 
 	vector<string>& trieResults, vector<string>& bloomFilterResults)
 {
 	for (int i = 0; i < (int) trieResults.size(); ++i)
@@ -241,4 +245,5 @@ void readInput(ifstream& in, vector<string>& webpages,
 		in >> line;
 		queries.push_back(line);
 	}
+	queries.pop_back();
 }

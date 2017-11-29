@@ -39,6 +39,11 @@ int main(int argc, char const *argv[])
 	cout << bf->contains("https://www.usc.edu/cs_rulde") << endl;	// 0?
 	cout << bf->contains("https://www.usc.edu/cs_rulel") << endl;	// 0?
 
+	bf->insert("save");
+	bf->insert("save");
+	bf->insert("limit");
+	bf->insert("savage");
+	cout << bf->contains("die") << endl;
 
 
 	delete bf;
@@ -99,6 +104,11 @@ BloomFilter::BloomFilter(unsigned int size)
 	else capacity = 51437;
 
 	bloom = new bool[capacity];
+
+	for (int i = 0; i < (int) capacity; ++i)
+	{
+		bloom[i] = false;
+	}
 
 }
 
