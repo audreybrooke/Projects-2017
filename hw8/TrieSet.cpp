@@ -5,7 +5,6 @@
 using namespace std;
 
 
-
 /*
 int main(int argc, char const *argv[])
 {
@@ -27,12 +26,38 @@ int main(int argc, char const *argv[])
 	set->insert("https://www.usc.edu/cs_rules");
 	cout << set->contains("https://www.usc.edu/cs_rules") << endl; // 1
 
+	set->insert("heap");
+	set->insert("hear");
+	set->insert("healing");
+	cout << set->contains("heap") << endl;		// 1
+	cout << set->contains("hear") << endl;		// 1
+	cout << set->contains("healing") << endl;	// 1
+	set->remove("heap");
+	cout << set->contains("heap") << endl;		// 0
+	cout << set->contains("hear") << endl;		// 1
+	cout << set->contains("healing") << endl;	// 1
+	cout << set->contains("hea") << endl;		// 0
+
+	set->insert("leaning");
+	set->insert("leans");
+	set->insert("lean");
+	set->insert("leaned");
+	cout << set->contains("lean") << endl;		// 1
+	cout << set->contains("lea") << endl;		// 0
+	cout << set->contains("leaning") << endl;	// 1
+	set->remove("lean");
+	cout << set->contains("leaning") << endl;	// 1
+	cout << set->contains("lean") << endl;		// 0
+	cout << set->contains("leans") << endl;		// 1
+	cout << set->contains("leaned") << endl;	// 1
+
+
+
 	delete set;
 
 	return 0;
 }
 */
-
 
 TrieSet::TrieSet()
 {
@@ -114,6 +139,8 @@ void TrieSet::remove (string input)
 		if (atEnd)
 		{
 			location->inSet = false;
+			removeHelper(location, input);
+			return;
 		}
 	}
 }
@@ -182,4 +209,37 @@ int TrieSet::findIndex (char i)
 	}
 
 	return index;
+}
+
+/*
+* removes unneccesary nodes
+*/
+void TrieSet::removeHelper(TrieNode* loc, string input)
+{
+	// at this point, you are at the end of input word.
+	// if it has any children, no nodes need to be removed
+	// if it has no children, then nodes need to be removed up the
+	// tree until a node that is true for inSet is reached (or root)
+
+	// leaves function if there is a word beyond this one
+
+
+	int j = (int)input.size() - 1;
+
+	while (loc != NULL && j != -1 && !(loc->inSet))
+	{
+		for (int i = 0; i < 30; ++i)
+		{
+			if (loc->children[i] != NULL)
+			{
+				return;
+			}
+		}
+
+		TrieNode* toDelete = loc;
+		loc->parent->children[findIndex(input[j])] = NULL;
+		loc = loc->parent;
+		j--;
+		delete toDelete;
+	}
 }

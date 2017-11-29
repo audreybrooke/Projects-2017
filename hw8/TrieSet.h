@@ -25,4 +25,5 @@ class TrieSet {
 	TrieNode* root;
 	int findIndex(char i);
 	void destruct_helper(TrieNode* loc);
+  void removeHelper(TrieNode* loc, std::string input);
 };
