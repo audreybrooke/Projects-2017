@@ -144,7 +144,8 @@ Report:
 		determine and check all the hash values. In the average case, a binary 
 		search tree will have O(log n) hieght and thus O(log n) insert and query 
 		runtime.
-		In this case the results are similar to a sorted lsit which also runs in O(log n) and is dependent on the number of inputs.
+		In this case the results are similar to a sorted lsit which also runs in O(
+		log n) and is dependent on the number of inputs.
 
 	- Binary search tree with AVL balancing
 		An AVL tree runs in O(log n) so an AVL worst case would have the same 
