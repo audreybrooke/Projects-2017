@@ -6,12 +6,12 @@
 
 Report:
 
-- Which sizes of input cases did you test your program on? This would apply both to 
-  the length m of the strings in the file, and the number n of strings/queries.
+- Which sizes of input cases did you test your program on? This would apply both
+ to the length m of the strings in the file, and the number n of strings/queries.
 
-  For 62558 insertions, 98395 queries with stings of average length 9. The strings were 
-  "dense" / similar (because they are the first 62558 entries of a dictionary, many 
-  shared prefixes).
+  For 62558 insertions, 98395 queries with stings of average length 9. The strings 
+  were "dense" / similar (because they are the first 62558 entries of a dictionary, 
+  many shared prefixes).
   total time for trie insertions: 0.037479 seconds (5.99108e-07 seconds per insertion)
   total time for trie queries: 0.015215 seconds (1.54632e-07 seconds per query)
   total time for bloom insertions: 0.069765 seconds (1.11521e-06 seconds per insertion)
