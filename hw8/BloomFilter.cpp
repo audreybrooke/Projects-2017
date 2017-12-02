@@ -66,6 +66,7 @@ void BloomFilter::insert (string input)
 	bloom[h1] = true;
 	bloom[h2] = true;
 	bloom[h3] = true;
+
 }
    
 /* returns whether this string is in the set.
@@ -119,6 +120,7 @@ BloomFilter::~BloomFilter()
 
 int BloomFilter::hash1 (string input) const
 {
+
 	int r[21] = {50161, 22696, 273, 19159, 14692, 8255, 20154, 
 		13109, 11098, 866, 15643, 11554, 38297, 42447, 9827, 
 		9648, 45568, 47227, 48459, 30713, 9110};
@@ -126,6 +128,7 @@ int BloomFilter::hash1 (string input) const
 	int* w = new int[21];
 
 	setW(w, input);
+
 
 	long total = 0;
 
@@ -228,10 +231,13 @@ void BloomFilter::setW(int* &w, string input) const
 		charValues[i] = determineValue(input[j]);
 	}
 
+
 	for (j = 0, i = 0; i < 21; i++, j+=3)
 	{
-		w[i] = (31*31) * charValues[j] + 31 * charValues[j+1] + charValues[j+2];
+		w[i] = ((31*31) * charValues[j]) + (31 * charValues[j+1]) + charValues[j+2];
 	}
+
+
 
 	/*cout << endl << "W values for " << input << endl;
 

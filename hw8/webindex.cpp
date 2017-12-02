@@ -63,6 +63,7 @@ int main(int argc, char const *argv[])
 	testBloomFilter(bloom, queries, ofile, bloomQueryTime, 
 		bloomFilterResults);
 
+
 	// Create the results for the output file
 	int numQ, falsePositives, totalNegatives;
 	falsePositives = 0;
@@ -246,13 +247,16 @@ int readInput(ifstream& in, vector<string>& webpages,
 	string line;
 	int numWP;
 	in >> numWP;
+	long total = 0;
 
 	// read webpages
 	for (int i = 0; i < numWP; ++i)
 	{
 		in >> line;
 		webpages.push_back(line);
+		total += line.size();
 	}
+	cout << "total = " << total << ". average = " << total / numWP << endl;
 
 	// read queries
 	while(!in.fail())
