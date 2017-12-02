@@ -9,7 +9,9 @@ Report:
 - Which sizes of input cases did you test your program on? This would apply both to 
   the length m of the strings in the file, and the number n of strings/queries.
 
-  For 62558 insertions, 98395 queries with stings of average length 9. The strings were "dense" / similar (because they are the first 62558 entries of a dictionary, many shared prefixes).
+  For 62558 insertions, 98395 queries with stings of average length 9. The strings were 
+  "dense" / similar (because they are the first 62558 entries of a dictionary, many 
+  shared prefixes).
   total time for trie insertions: 0.037479 seconds (5.99108e-07 seconds per insertion)
   total time for trie queries: 0.015215 seconds (1.54632e-07 seconds per query)
   total time for bloom insertions: 0.069765 seconds (1.11521e-06 seconds per insertion)
@@ -24,7 +26,7 @@ Report:
 	to insert and check for them because it only needs to move down ~9 nodes, while
 	the bloom filter has about the same constant runtime no matter how long the
 	inputs are.
-	**WHY?
+
 
   For 4 insertions, 4 queries and strings of average length 4.
   total time for trie insertions: 4e-06 seconds (1e-06 seconds per insertion)
@@ -61,7 +63,7 @@ Report:
 	the next letter in the string, thus is often does not need to check even close to 
 	the whole string length before returning. The bloom filter, on the other hand, is 
 	not impacted by this because the hash functions are not related to how similar
-	the inputs are to eachother. For every insert an query it must calculate all three
+	the inputs are to eachother. For every insert and query it must calculate all three
 	hash functions. Also, the hash functions might take longer in this implementation
 	because w must be redetermined for each hash, the values aren't saved and used again.
 
@@ -73,20 +75,12 @@ Report:
   9089 false positives (0.0573819 false positive rate)
   	This false positive rate is higher than the previous because there were many more
   	queries than inserts. Thus, although the array might be sparse, there are many
-  	combinations of hashes that are created for all these inserts, so some of them
+  	combinations of hashes that are created for all these queries, so some of them
   	are going to match with inserted hashes. Otherwise, the results are similar to
   	the first example, because the query to insert ratio is not too critical to
   	the running time of insert and query for blooms or tries.
 
 
-
-- For each of the two data structures, report how long each of your input cases took.
-
-- How long did it take per operation? Did it depend on the parameters, and if so how? 
-
-- What was the false positive rate? How did that depend on the parameters?
-
-- Explain why you think the results turned out the way they did.
 
 - How do you think the running time would compare if you were to implement your Set in 
   the following fashions?
@@ -100,9 +94,9 @@ Report:
 		which recalculated the w values each time.) It is also generally faster than a
 		trie which takes O(input length) to insert since it is not dependent on the size
 		of the input.
-		But, the advantage of quick inserts is lost when it comes to remove. An unordered
-		list has O(number of inserts) because at worst the query function would have to 
-		check every index of the list to find an item at the end or determine the string
+		But, the advantage of quick inserts is lost when it comes to query. An unordered
+		list has runtime O(number of inserts) because at worst the query function would have 
+		to check every index of the list to find an item at the end or determine the string
 		was not in the list. This is much worse than tries and bloom filters because a trie
 		only needs to to search the length of the string places (probably less than the
 		number of inserts) and a bloom filter determines and checks the hashes in constant
@@ -116,7 +110,8 @@ Report:
 		faster if there are a relatively large number of inputs. Because, binary search (necesary 
 		to find the placement of a new string in a sorted list) runs in O(log 
 		(number of inserts)), thus is slower with more inserts and trie insert runs in 
-		O(input length), thus is slower on longer inputs.
+		O(input length), thus is slower on longer inputs. Bloom filters run in constant time so
+		it will be faster on a relatively large number of inputs.
 		Querying a sorted list is faster than an unsorted because binary search takes O(log n)
 		and a unsorted list taked O(n) to find an item.
 		Inserting into a sorted list runs in O(log n) (binary search) and is dependent on how
@@ -136,6 +131,9 @@ Report:
 		insert and worse than a bloom filter if there were so few inserts that it took less
 		time than the constant to determine and check all the hash values. In the average case,
 		a binary search tree will have O(log n) hieght and thus O(log n) insert and query runtime.
-		In this case the results are similar to a sorted lsit
+		In this case the results are similar to a sorted lsit which also runs in O(log n) and is
+		dependent on the number of inputs.
 
 	- Binary search tree with AVL balancing
+		An AVL tree runs in O(log n) so an AVL worst case would have the same results as an
+		average case BST.
