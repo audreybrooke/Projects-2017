@@ -3,6 +3,8 @@
 
 #include <string>
 
+// 3 different comparators for different sorting preferences
+
 struct AlphaStrComp {
 	bool operator() (const std::string& lhs, const std::string& rhs);
 	// Uses string's built in operator< 
