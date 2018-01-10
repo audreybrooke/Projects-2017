@@ -17,11 +17,13 @@ using namespace std;
   LLDeque :: ~LLDeque () // deallocates all dynamically allocated memory
   {
 
-    for (int i = 0; i < size; ++i)
+    for (int i = 0; i < size -1; ++i)
     {
       head = head -> next;
       delete head -> prev;
     }
+    
+    delete head;
 
   }
 
