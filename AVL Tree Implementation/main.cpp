@@ -41,7 +41,6 @@ int main(int argc, char const *argv[])
 	bst->insert(pair<int, string>(11, 10));
 	bst->print();
 
-
 	delete bst;
 
 
